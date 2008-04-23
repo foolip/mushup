@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package mypackage;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
