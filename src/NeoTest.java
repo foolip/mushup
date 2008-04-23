@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.neo4j.api.core.*;
 
 /**
  * Simple servlet to validate that the Hello, World example can
@@ -32,8 +33,11 @@ import javax.servlet.http.HttpServletResponse;
  * @author Craig R. McClanahan <Craig.McClanahan@eng.sun.com>
  */
 
-public final class Hello extends HttpServlet {
+public final class NeoTest extends HttpServlet {
 
+    public enum MyRelationshipTypes implements RelationshipType {
+        KNOWS
+    }
 
     /**
      * Respond to a GET request for the content produced by
@@ -56,36 +60,33 @@ public final class Hello extends HttpServlet {
 	writer.println("<head>");
 	writer.println("<title>Sample Application Servlet Page</title>");
 	writer.println("</head>");
-	writer.println("<body bgcolor=white>");
+	writer.println("<body>");
+	writer.print("<p>");
 
-	writer.println("<table border=\"0\">");
-	writer.println("<tr>");
-	writer.println("<td>");
-	writer.println("<img src=\"images/tomcat.gif\">");
-	writer.println("</td>");
-	writer.println("<td>");
-	writer.println("<h1>Sample Application Servlet</h1>");
-	writer.println("This is the output of a servlet that is part of");
-	writer.println("the Hello, World application.  It displays the");
-	writer.println("request headers from the request we are currently");
-	writer.println("processing.");
-	writer.println("</td>");
-	writer.println("</tr>");
-	writer.println("</table>");
+        NeoService neo = new EmbeddedNeo("/var/lib/neo");
 
-	writer.println("<table border=\"0\" width=\"100%\">");
-	Enumeration names = request.getHeaderNames();
-	while (names.hasMoreElements()) {
-	    String name = (String) names.nextElement();
-	    writer.println("<tr>");
-	    writer.println("  <th align=\"right\">" + name + ":</th>");
-	    writer.println("  <td>" + request.getHeader(name) + "</td>");
-	    writer.println("</tr>");
-	}
-	writer.println("</table>");
+        Transaction tx = Transaction.begin();
+        try {
+            Node firstNode = neo.createNode();
+            Node secondNode = neo.createNode();
+            Relationship relationship = firstNode.createRelationshipTo(secondNode, MyRelationshipTypes.KNOWS);
 
+            firstNode.setProperty("message", "Hello, ");
+            secondNode.setProperty("message", "world!");
+            relationship.setProperty("message", "brave Neo ");
+            tx.success();
+
+            writer.print(firstNode.getProperty("message"));
+            writer.print(relationship.getProperty("message"));
+            writer.print(secondNode.getProperty("message"));
+        }
+        finally {
+            tx.finish();
+            neo.shutdown();
+        }
+
+	writer.println("</p>");
 	writer.println("</body>");
 	writer.println("</html>");
-
     }
 }
