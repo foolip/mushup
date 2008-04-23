@@ -190,11 +190,10 @@
 -->
 
 <!-- Dummy external dependency -->
-<!--
-  <property name="foo.jar"
-           value="/path/to/foo.jar"/>
--->
-
+  <property name="neo.jar"
+           value="/home/philip/neo-1.0-b6/neo-1.0-b6.jar"/>
+  <property name="jta.jar"
+           value="/home/philip/neo-1.0-b6/jta-spec1_0_1.jar"/>
 
 <!-- ==================== Compilation Classpath =========================== -->
 
@@ -213,9 +212,8 @@
 
     <!-- Include all JAR files that will be included in /WEB-INF/lib -->
     <!-- *** CUSTOMIZE HERE AS REQUIRED BY YOUR APPLICATION *** -->
-<!--
-    <pathelement location="${foo.jar}"/>
--->
+    <pathelement location="${neo.jar}"/>
+    <pathelement location="${jta.jar}"/>
 
     <!-- Include all elements that Tomcat exposes to applications -->
     <pathelement location="${catalina.home}/common/classes"/>
@@ -441,9 +439,9 @@
     <!-- Copy external dependencies as required -->
     <!-- *** CUSTOMIZE HERE AS REQUIRED BY YOUR APPLICATION *** -->
     <mkdir  dir="${build.home}/WEB-INF/lib"/>
-<!--
-    <copy todir="${build.home}/WEB-INF/lib" file="${foo.jar}"/>
--->
+
+    <copy todir="${build.home}/WEB-INF/lib" file="${neo.jar}"/>
+    <copy todir="${build.home}/WEB-INF/lib" file="${jta.jar}"/>
 
     <!-- Copy static files from external dependencies as needed -->
     <!-- *** CUSTOMIZE HERE AS REQUIRED BY YOUR APPLICATION *** -->

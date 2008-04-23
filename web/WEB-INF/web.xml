@@ -112,6 +112,11 @@
         <servlet-class>Hello</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>NeoTest</servlet-name>
+        <servlet-class>NeoTest</servlet-class>
+    </servlet>
+
     <!-- Define mappings that are used by the servlet container to
          translate a particular request URI (context-relative) to a
          particular servlet.  The examples below correspond to the
@@ -143,6 +148,11 @@
     <servlet-mapping>
         <servlet-name>HelloWorldExample</servlet-name>
         <url-pattern>/hello</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>NeoTest</servlet-name>
+        <url-pattern>/neo</url-pattern>
     </servlet-mapping>
 
     <!-- Define the default session timeout for your application,
