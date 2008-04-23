@@ -107,6 +107,10 @@
       </description>
     </servlet>
 
+    <servlet>
+        <servlet-name>HelloWorldExample</servlet-name>
+        <servlet-class>Hello</servlet-class>
+    </servlet>
 
     <!-- Define mappings that are used by the servlet container to
          translate a particular request URI (context-relative) to a
@@ -136,6 +140,10 @@
       <url-pattern>/graph</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>HelloWorldExample</servlet-name>
+        <url-pattern>/hello</url-pattern>
+    </servlet-mapping>
 
     <!-- Define the default session timeout for your application,
          in minutes.  From a servlet or JSP page, you can modify
