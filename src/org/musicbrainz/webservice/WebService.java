@@ -5,9 +5,11 @@ import org.musicbrainz.wsxml.*;
 
 import java.io.*;
 import java.net.*;
-import java.util.UUID;
+import java.util.*;
 
-public class WebService {
+class WebService {
+    public static final String ARTIST = "artist";
+
     private String host;
     private int port;
 
@@ -16,11 +18,28 @@ public class WebService {
 	this.port = 80;
     }
 
-    private URL makeURL(String entity, UUID id) throws WebServiceException {
-	String url = "http://" + this.host;
-	if (this.port != 80)
-	    url += ":" + this.port;
-	url += "/ws/1/" + entity + "/" + id + "?type=xml";
+    private URL makeURL(String entity, UUID id, Filter filter) throws WebServiceException {
+	String url = "http://" + host;
+	if (port != 80)
+	    url += ":" + port;
+	url += "/ws/1/" + entity + "/";
+
+	if (id != null) {
+	    url += id;
+	}
+	url += "?type=xml";
+
+	if (filter != null) {
+	    try {
+		for (Map.Entry<String, String> e : filter.getParameters().entrySet()) {
+		    url += "&" + URLEncoder.encode(e.getKey(), "UTF-8")
+			+ "=" + URLEncoder.encode(e.getValue(), "UTF-8");
+		}
+	    } catch (UnsupportedEncodingException e) {
+		throw new WebServiceException(e);
+	    }
+	}
+
 	// FIXME: remove
 	System.out.println(url);
 	try {
@@ -30,8 +49,8 @@ public class WebService {
 	}
     }
 
-    private Entity get(String entity, UUID id) throws WebServiceException {
-	URL url = this.makeURL(entity, id);
+    public Entity get(String entity, UUID id, Filter filter) throws WebServiceException {
+	URL url = this.makeURL(entity, id, filter);
 	MbXmlParser parser = new MbXmlParser();
 	InputStream is;
 	try {
@@ -45,7 +64,7 @@ public class WebService {
     }
 
     public Artist getArtist(UUID id) throws WebServiceException {
-	Entity e = get("artist", id);
+	Entity e = get("artist", id, null);
 	if (e instanceof Artist)
 	    return (Artist)e;
 	return null;

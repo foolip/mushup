@@ -56,30 +56,28 @@ public class MbXmlParser {
 	return a;
     }
 
-    private Entity createEntity(Element elem) throws ParserException {
-	if (elem.getTagName() == "artist") {
+    private Object parseNode(Node n) throws ParserException {
+	if (matches(n, "artist")) {
 	    return createArtist(elem);
 	} else {
 	    throw new ParserException("unknown element: " + elem.getTagName());
 	}
     }
 
-    public Entity parse(InputStream is) throws IOException, ParserException {
+    public Object parse(InputStream is) throws IOException, ParserException {
 	Document doc = this.parseXML(is);
 
 	NodeList elems = doc.getElementsByTagNameNS(NS_MMD_1, "metadata");
-
 	if (elems.getLength() == 0) {
 	    throw new ParserException("cannot find root element mmd:metafda");
 	}
 
-	Node md = elems.item(0);
-
-	if (md.getFirstChild() == null) {
-	    throw new ParserException("no metadata");
+	//
+	elems = elems.item(0).getElementsByTagName("*");
+	if (elems.getLength() == 0) {
+	    throw new ParserException("empty metadata element");
 	}
-
-	return createEntity((Element)md.getFirstChild());
+	return parseNode(elems.item(0));
     }
 
     // utility iterator
