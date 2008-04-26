@@ -1,18 +1,27 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <link rel="stylesheet" href="http://static.mushup.foolip.org/style.css" />
-    <title>{% block title %}Mushup!{% endblock %}</title>
+<title>{% block title %}Mushup!{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.1/build/reset/reset-min.css" />
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.1/build/fonts/fonts-min.css"> 
+<link rel="stylesheet" type="text/css" href="http://static.mushup.foolip.org/style.css" />
+<script type="text/javascript" src="http://yui.yahooapis.com/2.5.1/build/yahoo-dom-event/yahoo-dom-event.js"></script>  
+<script type="text/javascript" src="http://yui.yahooapis.com/2.5.1/build/connection/connection-min.js"></script> 
+<script type="text/javascript" src="http://static.mushup.foolip.org/input.js"></script>
+{% block script %}{% endblock %}
 </head>
 
 <body>
-    <div id="header">
-        {% block header %}
-	<a href="/login">Log in</a>
-	{% endblock %}
-    </div>
-    <div id="content">
-        {% block content %}{% endblock %}
-    </div>
+  <h1>Mushup!</h1>
+  <div id="user">
+    {% if openid %}
+    Logged in as <b>{{ openid|escape }}</b> | <a href="/logout">Log out</a>
+    {% else %}
+    <a href="/login">Log in</a>
+    {% endif %}
+  </div>
+  <div id="content">
+    {% block content %}{% endblock %}
+  </div>
 </body>
 </html>

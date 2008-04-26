@@ -1,15 +1,33 @@
 body {
+    padding: 8px;
     color: black;
     background: white;
     font-family: sans-serif;
-    font-size: 12pt;
 }
 
-#header {
-    font-size: smaller;
+a {
+    color: #e00;
+}
+
+h1 {
+    font-variant: small-caps;
+    font-weight: bold;
+    float: left;
+    margin: 0;
+}
+
+#user {
+    font-size: 93%;
     float: right;
 }
 
 #content {
-    background: #ccc;
+    font-size: 108%;
+    clear: both;
+    padding-top: 20px;
+}
+
+input[type=text] {
+    border: 1px solid #ccc;
+    padding: 1px;
 }

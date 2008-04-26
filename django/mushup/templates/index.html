@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block script %}
+<script type="text/javascript" src="http://static.mushup.foolip.org/search.js"></script>
+{% endblock %}
+
+{% block content %}
+<div>
+<form id="searchform" onsubmit="return false;">
+  Artist search:
+  <input type="text" size="40" name="artistsearch"
+	 class="cleardefault" value="Search for artist name..."/>
+</form>
+</div>
+{% endblock %}

@@ -147,6 +147,10 @@ def finishOpenID(request):
         return_to = util.getViewURL(request, finishOpenID)
         response = c.complete(request_args, return_to)
 
+        # Remember the login for this session
+        if response.status == consumer.SUCCESS:
+            request.session['openid'] = response.getDisplayIdentifier()
+
         # Get a Simple Registration response object if response
         # information was included in the OpenID response.
         sreg_response = {}
@@ -162,7 +166,7 @@ def finishOpenID(request):
         # Map different consumer status codes to template contexts.
         results = {
             consumer.CANCEL:
-            {'message': 'OpenID authentication cancelled.'},
+            {'cancel': 'OpenID authentication cancelled.'},
 
             consumer.FAILURE:
             {'error': 'OpenID authentication failed.'},
