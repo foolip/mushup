@@ -1,0 +1,15 @@
+body {
+    color: black;
+    background: white;
+    font-family: sans-serif;
+    font-size: 12pt;
+}
+
+#header {
+    font-size: smaller;
+    float: right;
+}
+
+#content {
+    background: #ccc;
+}

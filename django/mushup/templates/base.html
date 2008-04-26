@@ -1,20 +1,16 @@
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html>
 <head>
-    <link rel="stylesheet" href="style.css" />
-    <title>{% block title %}My amazing site{% endblock %}</title>
+    <link rel="stylesheet" href="http://static.mushup.foolip.org/style.css" />
+    <title>{% block title %}Mushup!{% endblock %}</title>
 </head>
 
 <body>
-    <div id="sidebar">
-        {% block sidebar %}
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/blog/">Blog</a></li>
-        </ul>
-        {% endblock %}
+    <div id="header">
+        {% block header %}
+	<a href="/login">Log in</a>
+	{% endblock %}
     </div>
-
     <div id="content">
         {% block content %}{% endblock %}
     </div>

@@ -4,6 +4,7 @@ urlpatterns = patterns('',
     # Example:
     # (r'^mushup/', include('mushup.foo.urls')),
     (r'^test/$', 'mushup.test.views.index'),
+    (r'^login/', include('mushup.djopenid.consumer.urls')),
 
     # Uncomment this for admin:
 #     (r'^admin/', include('django.contrib.admin.urls')),
