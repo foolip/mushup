@@ -8,8 +8,6 @@ import java.net.*;
 import java.util.*;
 
 class WebService {
-    public static final String ARTIST = "artist";
-
     private String host;
     private int port;
 
@@ -49,7 +47,7 @@ class WebService {
 	}
     }
 
-    public Entity get(String entity, UUID id, Filter filter) throws WebServiceException {
+    public Metadata get(String entity, UUID id, Filter filter) throws WebServiceException {
 	URL url = this.makeURL(entity, id, filter);
 	MbXmlParser parser = new MbXmlParser();
 	InputStream is;
@@ -61,12 +59,5 @@ class WebService {
 	} catch (ParserException e) {
 	    throw new WebServiceException(e);
 	}
-    }
-
-    public Artist getArtist(UUID id) throws WebServiceException {
-	Entity e = get("artist", id, null);
-	if (e instanceof Artist)
-	    return (Artist)e;
-	return null;
     }
 }

@@ -1,6 +1,7 @@
 package org.musicbrainz.wsxml;
 
 import org.musicbrainz.model.*;
+import org.musicbrainz.webservice.NS;
 
 import java.io.*;
 import java.util.*;
@@ -13,10 +14,23 @@ import org.xml.sax.SAXException;
 
 public class MbXmlParser {
 
-    private static final String NS_MMD_1 = "http://musicbrainz.org/ns/mmd-1.0#";
-    private static final String NS_REL_1 = "http://musicbrainz.org/ns/rel-1.0#";
-    private static final String NS_EXT_1 = "http://musicbrainz.org/ns/ext-1.0#";
-    
+    public Metadata parse(InputStream is) throws IOException, ParserException {
+	Document doc = this.parseXML(is);
+
+	NodeList elems = doc.getElementsByTagNameNS(NS.MMD_1, "metadata");
+	if (elems.getLength() == 0) {
+	    throw new ParserException("cannot find root element mmd:metafda");
+	}
+
+	return parseMetadata(elems.item(0));
+    }
+
+    private boolean isMMD(Node node, String name) {
+	return node.getNodeType() == Node.ELEMENT_NODE &&
+	    node.getLocalName() == name && 
+	    node.getNamespaceURI() == NS.MMD_1;
+    }
+
     private Document parseXML(InputStream is) throws IOException, ParserException {
 	try {
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -31,53 +45,121 @@ public class MbXmlParser {
 	}
     }
 
-    private boolean matches(Node node, String name) {
-	return node.getNodeType() == Node.ELEMENT_NODE &&
-	    node.getLocalName() == name && 
-	    node.getNamespaceURI() == NS_MMD_1;
+    private int parseScore(Node node) {
+	try {
+	    return Integer.parseInt(((Element)node).getAttributeNS(NS.EXT_1, "score"));
+	} catch (NumberFormatException e) {
+	    return 0;
+	}
     }
 
-    private Artist createArtist(Element elem) {
-	Artist a = new Artist();
-	a.setId(elem.getAttribute("id"));
-	
-	if (elem.getAttribute("type") == "Person") {
-	    a.setType(Artist.TYPE_PERSON);
-	} else if (elem.getAttribute("type") == "Group") {
-	    a.setType(Artist.TYPE_GROUP);
+    private int parseCount(Node node) {
+	try {
+	    return Integer.parseInt(((Element)node).getAttributeNS(NS.MMD_1, "count"));
+	} catch (NumberFormatException e) {
+	    return 0;
 	}
-	for (Node n : iter(elem.getChildNodes())) {
-	    if (matches(n, "name")) {
+    }
+
+    private int parseOffset(Node node) {
+	try {
+	    return Integer.parseInt(((Element)node).getAttributeNS(NS.MMD_1, "offset"));
+	} catch (NumberFormatException e) {
+	    return 0;
+	}
+    }
+
+    private String getId(Node node) {
+	return ((Element)node).getAttribute("id");
+    }
+
+    // FIXME: ugly as hell
+    private List<String> getUriListAttr(Node node, String attrName) {
+	String attr = ((Element)node).getAttribute(attrName);
+	if (attr == null)
+	    return null;
+
+	LinkedList<String> uris = new LinkedList<String>();
+	for (String uri : attr.split("\\s+")) {
+	    if (uri != "")
+		uris.add(NS.MMD_1 + uri);
+	}
+	return uris;
+    }
+
+    private String getUriAttr(Node node, String attrName) {
+	String uri = ((Element)node).getAttribute(attrName);
+	if (uri != "")
+	    return NS.MMD_1 + uri;
+	return null;
+    }
+
+    private Artist parseArtist(Node node) {
+	Artist a = new Artist();
+
+	a.setId(getId(node));
+	a.setType(getUriAttr(node, "type"));
+
+	for (Node n : iter(node.getChildNodes())) {
+	    if (isMMD(n, "name")) {
 		a.setName(n.getTextContent());
-	    } else if (matches(n, "sort-name")) {
+	    } else if (isMMD(n, "sort-name")) {
 		a.setSortName(n.getTextContent());
 	    }
 	}
 	return a;
     }
 
-    private Object parseNode(Node n) throws ParserException {
-	if (matches(n, "artist")) {
-	    return createArtist(elem);
-	} else {
-	    throw new ParserException("unknown element: " + elem.getTagName());
+    private Release parseRelease(Node node) {
+	Element elem = (Element)node;
+
+	Release r = new Release();
+
+	r.setId(getId(node));
+	for (String type: getUriListAttr(node, "type")) {
+	    r.addType(type);
 	}
+
+	for (Node n : iter(elem.getChildNodes())) {
+	    if (isMMD(n, "title")) {
+		r.setTitle(n.getTextContent());
+	    }
+	}
+	return r;
     }
 
-    public Object parse(InputStream is) throws IOException, ParserException {
-	Document doc = this.parseXML(is);
+    private List<ArtistResult> parseArtistResults(Node node) {
+	Element elem = (Element)node;
 
-	NodeList elems = doc.getElementsByTagNameNS(NS_MMD_1, "metadata");
-	if (elems.getLength() == 0) {
-	    throw new ParserException("cannot find root element mmd:metafda");
+	LinkedList<ArtistResult> list = new LinkedList<ArtistResult>();
+
+	for (Node n : iter(node.getChildNodes())) {
+	    if (isMMD(n, "artist")) {
+		ArtistResult ar = new ArtistResult();
+		ar.setArtist(parseArtist(n));
+		ar.setScore(parseScore(n));
+		list.add(ar);
+	    }
 	}
 
-	//
-	elems = elems.item(0).getElementsByTagName("*");
-	if (elems.getLength() == 0) {
-	    throw new ParserException("empty metadata element");
+	return list;
+    }
+
+    private Metadata parseMetadata(Node node) {
+	Metadata md = new Metadata();
+	for (Node n : iter(node.getChildNodes())) {
+	    //System.out.println(n.getNodeName());
+	    if (isMMD(n, "artist")) {
+		md.setArtist(parseArtist(n));
+	    } else if (isMMD(n, "release")) {
+		md.setRelease(parseRelease(n));
+	    } else if (isMMD(n, "artist-list")) {
+		md.setArtistResultsOffset(parseOffset(n));
+		md.setArtistResultsCount(parseCount(n));
+		md.setArtistResults(parseArtistResults(n));
+	    }
 	}
-	return parseNode(elems.item(0));
+	return md;
     }
 
     // utility iterator
