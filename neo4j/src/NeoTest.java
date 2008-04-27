@@ -25,7 +25,7 @@ public class NeoTest {
 	// to work, so we get the reference node.
 	Transaction tx = Transaction.begin();
 	try {
-	    Node referenceNode = neo.getReferenceNode();
+	    //Node referenceNode = neo.getReferenceNode();
 	    tx.success();
 	} finally {
 	    tx.finish();

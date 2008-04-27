@@ -1,4 +1,4 @@
-<project name="NeoBrain" default="compile" basedir=".">
+<project name="NeoBrainz" default="compile" basedir=".">
     <description>
         simple example build file
     </description>
@@ -7,6 +7,12 @@
   <property name="build" location="build"/>
   <property name="dist"  location="dist"/>
 
+  <path id="neo.class.path">
+    <fileset dir="lib">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
   <target name="init">
     <!-- Create the time stamp -->
     <tstamp/>
@@ -14,10 +20,30 @@
     <mkdir dir="${build}"/>
   </target>
 
-  <target name="compile" depends="init"
+  <target name="compile-lib" depends="init"
+        description="compile the source" >
+    <javac destdir="${build}">
+      <src path="${src}/org"/>
+      <classpath refid="neo.class.path"/>
+    </javac>
+  </target>
+
+  <target name="compile" depends="init,compile-lib"
         description="compile the source " >
     <!-- Compile the java code from ${src} into ${build} -->
-    <javac srcdir="${src}" destdir="${build}"/>
+    <javac srcdir="${src}" destdir="${build}">
+      <classpath refid="neo.class.path"/>
+    </javac>
+  </target>
+
+  <target name="run" depends="compile"
+        description="run NeoBrainz" >
+    <java classname="NeoBrainz">
+      <classpath refid="neo.class.path"/>
+      <classpath>
+        <pathelement path="${build}"/>
+      </classpath>
+    </java>
   </target>
 
   <target name="dist" depends="compile"
