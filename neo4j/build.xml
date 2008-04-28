@@ -20,16 +20,8 @@
     <mkdir dir="${build}"/>
   </target>
 
-  <target name="compile-lib" depends="init"
+  <target name="compile" depends="init"
         description="compile the source" >
-    <javac destdir="${build}">
-      <src path="${src}/org"/>
-      <classpath refid="neo.class.path"/>
-    </javac>
-  </target>
-
-  <target name="compile" depends="init,compile-lib"
-        description="compile the source " >
     <!-- Compile the java code from ${src} into ${build} -->
     <javac srcdir="${src}" destdir="${build}">
       <classpath refid="neo.class.path"/>
@@ -38,7 +30,17 @@
 
   <target name="run" depends="compile"
         description="run NeoBrainz" >
-    <java classname="NeoBrainz">
+    <java classname="org.foolip.mushup.test.NeoBrainz">
+      <classpath refid="neo.class.path"/>
+      <classpath>
+        <pathelement path="${build}"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="shell" depends="compile"
+        description="run NeoShell" >
+    <java classname="org.foolip.mushup.test.NeoShell">
       <classpath refid="neo.class.path"/>
       <classpath>
         <pathelement path="${build}"/>
