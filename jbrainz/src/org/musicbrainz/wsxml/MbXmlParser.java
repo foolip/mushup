@@ -69,12 +69,12 @@ public class MbXmlParser {
 	}
     }
 
-    private String getId(Node node) {
+    private String parseId(Node node) {
 	return ((Element)node).getAttribute("id");
     }
 
     // FIXME: ugly as hell
-    private List<String> getUriListAttr(Node node, String attrName) {
+    private List<String> parseUriListAttr(Node node, String attrName) {
 	String attr = ((Element)node).getAttribute(attrName);
 	if (attr == null)
 	    return null;
@@ -87,7 +87,7 @@ public class MbXmlParser {
 	return uris;
     }
 
-    private String getUriAttr(Node node, String attrName) {
+    private String parseUriAttr(Node node, String attrName) {
 	String uri = ((Element)node).getAttribute(attrName);
 	if (uri != "")
 	    return NS.MMD_1 + uri;
@@ -97,8 +97,8 @@ public class MbXmlParser {
     private Artist parseArtist(Node node) {
 	Artist a = new Artist();
 
-	a.setId(getId(node));
-	a.setType(getUriAttr(node, "type"));
+	a.setId(parseId(node));
+	a.setType(parseUriAttr(node, "type"));
 
 	for (Node n : iter(node.getChildNodes())) {
 	    if (isMMD(n, "name")) {
@@ -115,14 +115,16 @@ public class MbXmlParser {
 
 	Release r = new Release();
 
-	r.setId(getId(node));
-	for (String type: getUriListAttr(node, "type")) {
+	r.setId(parseId(node));
+	for (String type: parseUriListAttr(node, "type")) {
 	    r.addType(type);
 	}
 
 	for (Node n : iter(elem.getChildNodes())) {
 	    if (isMMD(n, "title")) {
 		r.setTitle(n.getTextContent());
+	    } else if (isMMD(n, "track-list")) {
+		
 	    }
 	}
 	return r;
