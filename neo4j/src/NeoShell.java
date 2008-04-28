@@ -1,16 +1,13 @@
+package org.foolip.mushup.test;
+
 import org.neo4j.api.core.*;
 
 /**
  * Example class that constructs a simple node space with message attributes and then prints them.
  */
-public class NeoTest {
-
-    public enum MyRelationshipTypes implements RelationshipType {
-        KNOWS
-    }
-
+public class NeoShell {
     public static void main(String[] args) {
-        final NeoService neo = new EmbeddedNeo("neobase");
+        final NeoService neo = new EmbeddedNeo("neobrainz");
 
 	Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 		public void run() {
@@ -25,7 +22,7 @@ public class NeoTest {
 	// to work, so we get the reference node.
 	Transaction tx = Transaction.begin();
 	try {
-	    //Node referenceNode = neo.getReferenceNode();
+	    Node referenceNode = neo.getReferenceNode();
 	    tx.success();
 	} finally {
 	    tx.finish();
