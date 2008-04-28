@@ -1,73 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.foolip.mushup</groupId>
-  <artifactId>mushup</artifactId>
+  <groupId>org.musicbrainz</groupId>
+  <artifactId>jbrainz</artifactId>
   <packaging>jar</packaging>
-  <version>0.1</version>
-  <name>mushup</name>
-  <url>http://mushup.foolip.org</url>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.0.2</version>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-	</configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.neo4j</groupId>
-                  <artifactId>neo</artifactId>
-                  <version>1.0-b6</version>
-                  <destFileName>neo.jar</destFileName>
-                </artifactItem>
-              </artifactItems>
-	      <outputDirectory>${project.build.directory}/lib</outputDirectory>
-	      <overWriteReleases>false</overWriteReleases>
-	      <overWriteSnapshots>true</overWriteSnapshots>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-  <repositories>
-    <repository>
-      <id>neo4j-public-repository</id>
-      <url>http://m2.neo4j.org</url>
-    </repository>
-  </repositories>
+  <version>1.0-SNAPSHOT</version>
+  <name>jbrainz</name>
+  <url>http://musicbrainz.org</url>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.neo4j</groupId>
-      <artifactId>neo</artifactId>
-      <version>1.0-b6</version>
-    </dependency>
-    <dependency>
-      <groupId>org.neo4j</groupId>
-      <artifactId>index-util</artifactId>
-      <version>0.3-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
