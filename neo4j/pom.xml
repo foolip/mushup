@@ -18,6 +18,32 @@
           <target>1.5</target>
 	</configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.neo4j</groupId>
+                  <artifactId>neo</artifactId>
+                  <version>1.0-b6</version>
+                  <destFileName>neo.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+	      <outputDirectory>${project.build.directory}/lib</outputDirectory>
+	      <overWriteReleases>false</overWriteReleases>
+	      <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <repositories>
@@ -37,6 +63,11 @@
       <groupId>org.neo4j</groupId>
       <artifactId>neo</artifactId>
       <version>1.0-b6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.neo4j</groupId>
+      <artifactId>index-util</artifactId>
+      <version>0.3-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
