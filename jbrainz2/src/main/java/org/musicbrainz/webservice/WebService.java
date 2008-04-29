@@ -1,11 +1,12 @@
 package org.musicbrainz.webservice;
 
 import org.musicbrainz.model.*;
-import org.musicbrainz.wsxml.*;
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import javax.xml.parsers.*;
+import org.xml.sax.SAXException;
 
 class WebService {
     private String host;
@@ -38,8 +39,6 @@ class WebService {
 	    }
 	}
 
-	// FIXME: remove
-	System.out.println(url);
 	try {
 	    return new URL(url);
 	} catch (MalformedURLException e) {
@@ -47,16 +46,28 @@ class WebService {
 	}
     }
 
-    public Metadata get(String entity, UUID id, Filter filter) throws WebServiceException {
+    public InputStream get(String entity, UUID id, Filter filter) throws WebServiceException {
 	URL url = this.makeURL(entity, id, filter);
-	MbXmlParser parser = new MbXmlParser();
-	InputStream is;
 	try {
-	    is = url.openStream();
-	    return parser.parse(is);
+	    return url.openStream();
 	} catch (IOException e) {
-	    throw new ConnectionException(e);
-	} catch (ParserException e) {
+	    throw new WebServiceException(e);
+	}
+    }
+
+    public MMDDocument getMMD(String entity, UUID id, Filter filter)
+	throws WebServiceException {
+	try {
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	    factory.setValidating(false);
+	    factory.setNamespaceAware(true);
+	    InputStream stream = get(entity, id, filter);
+	    return new MMDDocument(factory.newDocumentBuilder().parse(stream));
+	} catch (ParserConfigurationException e) {
+	    throw new WebServiceException(e);
+	} catch (SAXException e) {
+	    throw new ResponseException(e);
+	} catch (IOException e) {
 	    throw new WebServiceException(e);
 	}
     }

@@ -1,15 +1,7 @@
-package org.musicbrainz.wsxml;
+package org.musicbrainz.webservice;
 
-import org.musicbrainz.model.*;
+import org.musicbrainz.model.Artist;
 
-public class ArtistResult extends Result {
-    private Artist artist;
-
-    public Artist getArtist() {
-	return this.artist;
-    }
-
-    public void setArtist(Artist artist) {
-	this.artist = artist;
-    }
+public interface ArtistResult extends Result {
+    Artist getArtist();
 }
