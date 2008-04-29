@@ -6,10 +6,9 @@
 
 <web-app>
 
-
     <!-- General description of your web application -->
 
-    <display-name>Mushup</display-name>
+    <display-name>Mushup!</display-name>
     <description>
       This is version X.X of an application to perform
       a wild and wonderful task, based on servlets and
@@ -109,12 +108,7 @@
 
     <servlet>
         <servlet-name>HelloWorldExample</servlet-name>
-        <servlet-class>Hello</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>NeoTest</servlet-name>
-        <servlet-class>NeoTest</servlet-class>
+        <servlet-class>org.foolip.mushup.Hello</servlet-class>
     </servlet>
 
     <!-- Define mappings that are used by the servlet container to
@@ -150,11 +144,6 @@
         <url-pattern>/hello</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>NeoTest</servlet-name>
-        <url-pattern>/neo</url-pattern>
-    </servlet-mapping>
-
     <!-- Define the default session timeout for your application,
          in minutes.  From a servlet or JSP page, you can modify
          the timeout for a particular session dynamically by using
@@ -163,6 +152,5 @@
     <session-config>
       <session-timeout>30</session-timeout>    <!-- 30 minutes -->
     </session-config>
-
 
 </web-app>
