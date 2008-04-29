@@ -5,7 +5,7 @@
   <artifactId>jbrainz</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>jbrainz</name>
+  <name>JBrainz</name>
   <url>http://musicbrainz.org</url>
   <dependencies>
     <dependency>
