@@ -1,4 +1,4 @@
-package org.foolip.mushup;
+package org.foolip.mushup.test;
 
 import org.neo4j.util.btree.*;
 import org.neo4j.api.core.*;
@@ -7,12 +7,6 @@ import org.foolip.mushup.*;
 import java.util.UUID;
 
 public class NeoBrainz {
-
-    public enum RelationshipTypes  {
-	MUSICBRAINZ,
-	ARTISTS,
-	ARTIST
-    }
 
     public static void main(String[] args) {
         NeoService neo = new EmbeddedNeo("neobrainz");

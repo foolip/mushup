@@ -17,6 +17,7 @@ public class NeoShell {
 	    }));
 
 	neo.enableRemoteShell();
+	System.out.println("Waiting for remote shell...");
 
 	// It appears that some transaction must be done for the shell
 	// to work, so we get the reference node.
