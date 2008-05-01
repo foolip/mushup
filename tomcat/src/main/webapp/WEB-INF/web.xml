@@ -3,82 +3,30 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-    <!-- General description of your web application -->
+  <display-name>Mushup!</display-name>
+  <description>
+    Mushup! is a mashup of MusicBrainz and other sources.
+  </description>
 
-    <display-name>Mushup!</display-name>
-    <description>
-      Mushup! is a mashup of MusicBrainz and other sources.
-    </description>
+  <servlet>
+    <servlet-name>Mushup Search</servlet-name>
+    <servlet-class>org.foolip.mushup.Search</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Mushup Search</servlet-name>
+    <url-pattern>/search/*</url-pattern>
+  </servlet-mapping>
 
-
-    <!-- Context initialization parameters that define shared
-         String constants used within your application, which
-         can be customized by the system administrator who is
-         installing your application.  The values actually
-         assigned to these parameters can be retrieved in a
-         servlet or JSP page by calling:
-
-             String value =
-               getServletContext().getInitParameter("name");
-
-         where "name" matches the <param-name> element of
-         one of these initialization parameters.
-
-         You can define any number of context initialization
-         parameters, including zero.
-    -->
-
-    <context-param>
-      <param-name>webmaster</param-name>
-      <param-value>philip@foolip.org</param-value>
-      <description>
-        The EMAIL address of the administrator to whom questions
-        and comments about this application should be addressed.
-      </description>
-    </context-param>
-
-    <servlet>
-        <servlet-name>HelloWorldExample</servlet-name>
-        <servlet-class>org.foolip.mushup.Hello</servlet-class>
+  <servlet>
+    <servlet-name>OpenID Login</servlet-name>
+    <servlet-class>org.foolip.mushup.ConsumerServlet</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>HelloWorldExample</servlet-name>
-        <url-pattern>/hello</url-pattern>
-    </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>OpenID Login</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
 
-    <servlet>
-        <servlet-name>MBTest</servlet-name>
-        <servlet-class>org.foolip.mushup.MBTest</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>MBTest</servlet-name>
-        <url-pattern>/mbtest</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>MushSearch</servlet-name>
-        <servlet-class>org.foolip.mushup.Search</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>MushSearch</servlet-name>
-        <url-pattern>/search/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-      <servlet-name>OpenID Login</servlet-name>
-      <servlet-class>org.foolip.mushup.ConsumerServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-      <servlet-name>OpenID Login</servlet-name>
-      <url-pattern>/login</url-pattern>
-    </servlet-mapping>
-
-    <!-- Define the default session timeout for your application,
-         in minutes.  From a servlet or JSP page, you can modify
-         the timeout for a particular session dynamically by using
-         HttpSession.getMaxInactiveInterval(). -->
-
-    <session-config>
-      <session-timeout>30</session-timeout>    <!-- 30 minutes -->
-    </session-config>
+  <session-config>
+    <session-timeout>60</session-timeout>
+  </session-config>
 </web-app>
