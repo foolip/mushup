@@ -1,7 +1,6 @@
 package org.musicbrainz.webservice;
 
 import org.musicbrainz.model.*;
-//import org.musicbrainz.Utils;
 import org.musicbrainz.webservice.*;
 
 import java.util.*;
@@ -16,31 +15,18 @@ public class Query {
     public Artist getArtistById(UUID id) throws WebServiceException {
 	MMDDocument mmd = ws.getMMD("artist", id, null);
 	if (mmd.getArtist() == null)
-	    throw new ResponseException("no artist in response");
+	    throw new ResponseException("no artist element");
 	return mmd.getArtist();
     }
 
-    /*
-    public Artist getArtistById(String id) throws WebServiceException {
-	return getArtistById(Utils.extractUUID(id));
-    }
-    */
-
     public Iterable<ArtistResult> getArtists(ArtistFilter filter) throws WebServiceException {
-	MMDDocument mmd = ws.getMMD("artist", null, filter);
-	if (mmd.getArtistResults() == null)
-	    throw new ResponseException("no artist result list in response");
-	return mmd.getArtistResults();
+	return ws.getMMD("artist", null, filter).getArtistResults();
     }
 
     /*
     public Release getReleaseById(UUID id) throws WebServiceException {
 	Metadata md = ws.get("release", id, null);
 	return md.getRelease();
-    }
-
-    public Release getReleaseById(String id) throws WebServiceException {
-	return getReleaseById(Utils.extractUUID(id));
     }
 
     public List<ReleaseResult> getReleases(ReleaseFilter filter) throws WebServiceException {

@@ -50,6 +50,8 @@ class WebService {
 	URL url = this.makeURL(entity, id, filter);
 	try {
 	    return url.openStream();
+	} catch (FileNotFoundException e) {
+	    throw new ResourceNotFoundException(e.getMessage());
 	} catch (IOException e) {
 	    throw new WebServiceException(e);
 	}

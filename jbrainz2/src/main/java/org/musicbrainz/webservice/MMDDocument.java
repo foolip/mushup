@@ -17,22 +17,17 @@ class MMDDocument {
     */
 
     MMDDocument(Document doc) throws ResponseException {
+	artistResults = new LinkedList<ArtistResult>();
+
 	NodeList elems = doc.getElementsByTagNameNS(MMD.NS_MMD_1, "metadata");
 	if (elems.getLength() == 0) {
-	    throw new ResponseException("no mmd:metadata root element");
+	    throw new ResponseException("no mmd:metadata element");
 	}
 
 	for (Node n : MMD.iter(elems.item(0).getChildNodes())) {
-	    //System.out.println(n.getNodeName());
 	    if (MMD.isMMD(n, "artist")) {
 		artist = new MMDArtist(n);
-	    /*
-	    }
-	    else if (isMMD(n, "release")) {
-		md.setRelease(parseRelease(n));
-	    */
 	    } else if (MMD.isMMD(n, "artist-list")) {
-		artistResults = new LinkedList<ArtistResult>();
 		for (Node n2 : MMD.iter(n.getChildNodes())) {
 		    if (MMD.isMMD(n2, "artist")) {
 			artistResults.add(new MMDArtistResult(n2));

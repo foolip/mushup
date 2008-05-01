@@ -8,7 +8,7 @@ public class MBTest {
 	Query q = new Query();
 	Artist a;
 
-	a = q.getArtistById(UUID.fromString("b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d"));
+	a = q.getArtistById(UUID.fromString("b10bbbfc-cf9e-42e0-be17-e2c3e1d260ad"));
 	print(a);
 
 	ArtistFilter af = new ArtistFilter();
