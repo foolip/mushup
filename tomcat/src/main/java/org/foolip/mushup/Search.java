@@ -33,40 +33,22 @@ public final class Search extends HttpServlet {
 			     HttpServletResponse response,
 			     String query, String format)
       throws IOException, ServletException {
-
-	response.setContentType("text/html; charset=UTF-8");
-	PrintWriter writer = response.getWriter();
-
-	writer.println("<html>");
-	writer.println("<head>");
-	writer.println("<title>Mushup! MusicBrainz Search</title>");
-	writer.println("</head>");
-	writer.println("<body>");
-
-	writer.println("<h1>" + query + "</h1>");
-	writer.println("<p><i>" + format + "</i>");
+	Iterable<ArtistResult> result;
 	try {
 	    Query q = new Query();
 	    ArtistFilter af = new ArtistFilter();
 	    af.setName(query);
-	    for (ArtistResult ar : q.getArtists(af)) {
-		Artist a = ar.getArtist();
-		writer.println("<p>");
-		writer.println("ID: " + a.getId());
-		writer.println("<br />");
-		writer.println("Type: " + a.getType());
-		writer.println("<br />");
-		writer.println("Name: " + a.getName());
-		writer.println("<br />");
-		writer.println("Sort Name: " + a.getSortName());
-		writer.println("</p>");
-	    }
+	    result = q.getArtists(af);
 	} catch (WebServiceException e) {
 	    response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage());
+	    return;
 	}
 
-	writer.println("</body>");
-	writer.println("</html>");
+	if (format.equals("json")) {
+	    request.setAttribute("result", result);
+	    this.getServletContext().getRequestDispatcher("/json/artistResults.jsp")
+		.forward(request, response);
+	}
     }
 
     public void doGet(HttpServletRequest request,
@@ -74,6 +56,8 @@ public final class Search extends HttpServlet {
       throws IOException, ServletException {
 
 	String format = request.getParameter("format");
+	if (format == null)
+	    format = "html";
 	String path = request.getPathInfo();
 	if (path != null) {
 	    // figure out if unified or artist/release/track search is wanted

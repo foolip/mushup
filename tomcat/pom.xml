@@ -16,6 +16,12 @@
     </dependency>
 
     <dependency>
+      <groupId>atg.taglib.json</groupId>
+      <artifactId>json-taglib</artifactId>
+      <version>0.5-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.openid4java</groupId>
       <artifactId>openid4java</artifactId>
       <version>0.9.3</version>
@@ -98,6 +104,7 @@
       <artifactId>standard</artifactId>
       <version>[1.0,)</version>
     </dependency>
+
 <!--
     <dependency>
       <groupId>commons-beanutils</groupId>

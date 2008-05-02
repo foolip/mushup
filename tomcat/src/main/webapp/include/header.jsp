@@ -6,10 +6,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <title>Mushup! <c:out value="${param.subtitle}"/></title>
 <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.1/build/reset/reset-min.css"/>
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.1/build/fonts/fonts-min.css"/> 
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.1/build/fonts/fonts-min.css"/>
 <link rel="stylesheet" type="text/css" href="http://static.mushup.foolip.org/style.css"/>
-<script type="text/javascript" src="http://yui.yahooapis.com/2.5.1/build/yahoo-dom-event/yahoo-dom-event.js"></script>  
-<script type="text/javascript" src="http://yui.yahooapis.com/2.5.1/build/connection/connection-min.js"></script> 
+<script type="text/javascript" src="http://yui.yahooapis.com/2.5.1/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/2.5.1/build/connection/connection-min.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/2.5.1/build/json/json-min.js"></script>
 <script type="text/javascript">ROOT="<c:url value='/'/>"</script>
 <script type="text/javascript" src="http://static.mushup.foolip.org/input.js"></script>
 <script type="text/javascript" src="http://static.mushup.foolip.org/search.js"></script>
