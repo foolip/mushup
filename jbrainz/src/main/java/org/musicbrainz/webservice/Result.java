@@ -1,5 +1,5 @@
 package org.musicbrainz.webservice;
 
-interface Result {
+public interface Result {
     int getScore();
 }
