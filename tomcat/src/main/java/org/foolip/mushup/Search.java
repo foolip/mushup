@@ -7,8 +7,6 @@ import java.util.*;
 import java.util.regex.*;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Enumeration;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -56,8 +54,9 @@ public final class Search extends HttpServlet {
       throws IOException, ServletException {
 
 	String format = request.getParameter("format");
-	if (format == null)
-	    format = "html";
+	if (format == null || !format.equals("json"))
+	    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+
 	String path = request.getPathInfo();
 	if (path != null) {
 	    // figure out if unified or artist/release/track search is wanted

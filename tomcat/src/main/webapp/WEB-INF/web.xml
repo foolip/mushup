@@ -9,12 +9,21 @@
   </description>
 
   <servlet>
-    <servlet-name>Mushup Search</servlet-name>
+    <servlet-name>Search</servlet-name>
     <servlet-class>org.foolip.mushup.Search</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Mushup Search</servlet-name>
+    <servlet-name>Search</servlet-name>
     <url-pattern>/search/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>Info</servlet-name>
+    <servlet-class>org.foolip.mushup.Info</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Info</servlet-name>
+    <url-pattern>/info</url-pattern>
   </servlet-mapping>
 
   <servlet>
