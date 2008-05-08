@@ -1,7 +1,0 @@
-Searched for {{ name }}
-
-{% for result in results %}
-{{ result.getArtist.name }} ({{ result.getArtist.disambiguation }})
-{% endfor %}
-
-Processing time: {{ time }} s
