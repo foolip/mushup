@@ -8,16 +8,19 @@ public class MBTest {
 	Query q = new Query();
 	Artist a;
 
-	a = q.getArtistById(UUID.fromString("b10bbbfc-cf9e-42e0-be17-e2c3e1d260ad"));
+	UUID id = UUID.fromString("b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d");
+	Includes inc = new Includes();
+	inc.include("url-rels");
+	a = q.getArtistById(id, inc);
 	print(a);
 
+	/*
 	ArtistFilter af = new ArtistFilter();
 	af.setName("mono");
 	for (ArtistResult ar : q.getArtists(af)) {
 	    print(ar);
 	}
 
-	/*
 	Release r;
 	r = q.getReleaseById("1cf0f65a-f40b-4fba-a83f-559da2c86310");
 	print(r);
@@ -29,6 +32,9 @@ public class MBTest {
 	System.out.println("Type: " + a.getType());
 	System.out.println("Name: " + a.getName());
 	System.out.println("Sort Name: " + a.getSortName());
+	for (UrlRelation urlRel : a.getUrlRelations()) {
+	    System.out.println(urlRel.getType() + ": " + urlRel.getUrl());
+	}
     }
 
     private static void print(ArtistResult ar) {

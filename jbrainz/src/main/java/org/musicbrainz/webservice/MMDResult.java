@@ -1,5 +1,6 @@
 package org.musicbrainz.webservice;
 
+import org.musicbrainz.model.NS;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
@@ -9,11 +10,11 @@ abstract class MMDResult implements Result {
     MMDResult(Node node) throws ResponseException {
 	Element elem = (Element)node;
 
-	if (!elem.hasAttributeNS(MMD.NS_EXT_1, "score")) {
+	if (!elem.hasAttributeNS(NS.EXT_1, "score")) {
 	    throw new ResponseException("no ext:score attribute");
 	}
 	try {
-	    score = Integer.parseInt(elem.getAttributeNS(MMD.NS_EXT_1, "score"));
+	    score = Integer.parseInt(elem.getAttributeNS(NS.EXT_1, "score"));
 	} catch (NumberFormatException e) {
 	    throw new ResponseException("non-integer ext:score attribute");
 	}

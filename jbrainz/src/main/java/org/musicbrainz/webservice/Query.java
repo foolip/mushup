@@ -12,26 +12,18 @@ public class Query {
 	this.ws = new WebService();
     }
 
-    public Artist getArtistById(UUID id) throws WebServiceException {
-	MMDDocument mmd = ws.getMMD("artist", id, null);
+    public Artist getArtistById(UUID id, Includes inc) throws WebServiceException {
+	MMDDocument mmd = ws.getMMD("artist", id, null, inc);
 	if (mmd.getArtist() == null)
 	    throw new ResponseException("no artist element");
 	return mmd.getArtist();
     }
 
+    public Artist getArtistById(UUID id) throws WebServiceException {
+	return getArtistById(id, null);
+    }
+
     public Iterable<ArtistResult> getArtists(ArtistFilter filter) throws WebServiceException {
-	return ws.getMMD("artist", null, filter).getArtistResults();
+	return ws.getMMD("artist", null, filter, null).getArtistResults();
     }
-
-    /*
-    public Release getReleaseById(UUID id) throws WebServiceException {
-	Metadata md = ws.get("release", id, null);
-	return md.getRelease();
-    }
-
-    public List<ReleaseResult> getReleases(ReleaseFilter filter) throws WebServiceException {
-	Metadata md = ws.get("release", null, filter);
-	return md.getReleaseResults();
-    }
-    */
 }

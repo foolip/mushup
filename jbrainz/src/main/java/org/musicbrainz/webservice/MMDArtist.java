@@ -1,5 +1,6 @@
 package org.musicbrainz.webservice;
 
+import org.musicbrainz.model.NS;
 import org.musicbrainz.model.Artist;
 
 import org.w3c.dom.Node;
@@ -12,7 +13,7 @@ class MMDArtist extends MMDEntity implements Artist {
     MMDArtist(Node node) throws ResponseException {
 	super(node);
 
-	setType(MMD.getUriAttr(node, "type"));
+	setType(MMD.getUriAttr(node, "type", NS.MMD_1));
 
 	for (Node n : MMD.iter(node.getChildNodes())) {
 	    if (MMD.isMMD(n, "name")) {

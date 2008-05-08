@@ -17,7 +17,7 @@ class WebService {
 	this.port = 80;
     }
 
-    private URL makeURL(String entity, UUID id, Filter filter) throws WebServiceException {
+    private URL makeURL(String entity, UUID id, Filter filter, Includes includes) throws WebServiceException {
 	String url = "http://" + host;
 	if (port != 80)
 	    url += ":" + port;
@@ -39,6 +39,17 @@ class WebService {
 	    }
 	}
 
+	if (includes != null) {
+	    url += "&inc=";
+	    for (Iterator<String> i = includes.getIncludeTags().iterator(); i.hasNext();) {
+		url += i.next();
+		if (i.hasNext())
+		    url += "+";
+	    }
+	}
+
+	System.out.println(url);
+
 	try {
 	    return new URL(url);
 	} catch (MalformedURLException e) {
@@ -46,8 +57,8 @@ class WebService {
 	}
     }
 
-    public InputStream get(String entity, UUID id, Filter filter) throws WebServiceException {
-	URL url = this.makeURL(entity, id, filter);
+    public InputStream get(String entity, UUID id, Filter filter, Includes includes) throws WebServiceException {
+	URL url = this.makeURL(entity, id, filter, includes);
 	try {
 	    return url.openStream();
 	} catch (FileNotFoundException e) {
@@ -57,13 +68,13 @@ class WebService {
 	}
     }
 
-    public MMDDocument getMMD(String entity, UUID id, Filter filter)
+    public MMDDocument getMMD(String entity, UUID id, Filter filter, Includes includes)
 	throws WebServiceException {
 	try {
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    factory.setValidating(false);
 	    factory.setNamespaceAware(true);
-	    InputStream stream = get(entity, id, filter);
+	    InputStream stream = get(entity, id, filter, includes);
 	    return new MMDDocument(factory.newDocumentBuilder().parse(stream));
 	} catch (ParserConfigurationException e) {
 	    throw new WebServiceException(e);

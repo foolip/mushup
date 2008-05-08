@@ -1,15 +1,12 @@
 package org.musicbrainz.webservice;
 
+import org.musicbrainz.model.NS;
 import java.util.*;
 import org.w3c.dom.*;
 
 // random constants and helper functions
 class MMD {
     private MMD() {} // do not instantiate
-
-    static final String NS_MMD_1 = "http://musicbrainz.org/ns/mmd-1.0#";
-    static final String NS_REL_1 = "http://musicbrainz.org/ns/rel-1.0#";
-    static final String NS_EXT_1 = "http://musicbrainz.org/ns/ext-1.0#";
 
     // utility iterator
     static final Iterable<Node> iter(final NodeList list) {
@@ -21,7 +18,7 @@ class MMD {
 		    private int length = list.getLength();
 		    public boolean hasNext() { return curr < length; }
 		    public Node next() { return list.item(curr++); }
-		    public void remove(/* no can do */) {}
+		    public void remove() {/* no can do */}
 		};
 	    }
 	};
@@ -29,14 +26,14 @@ class MMD {
 
     static boolean isMMD(Node node, String name) {
 	return node.getNodeType() == Node.ELEMENT_NODE &&
-	    node.getLocalName() == name && 
-	    node.getNamespaceURI() == NS_MMD_1;
+	    node.getLocalName().equals(name) && 
+	    node.getNamespaceURI().equals(NS.MMD_1);
     }
 
-    static String getUriAttr(Node node, String attrName) {
-	String uri = ((Element)node).getAttribute(attrName);
-	if (uri != "")
-	    return NS_MMD_1 + uri;
+    static String getUriAttr(Node node, String attrName, String nsPrefix) {
+	String fragment = ((Element)node).getAttribute(attrName);
+	if (!fragment.equals(""))
+	    return nsPrefix + fragment;
 	return null;
     }
 }

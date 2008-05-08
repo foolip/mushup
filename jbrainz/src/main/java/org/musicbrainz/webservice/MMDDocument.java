@@ -19,7 +19,7 @@ class MMDDocument {
     MMDDocument(Document doc) throws ResponseException {
 	artistResults = new LinkedList<ArtistResult>();
 
-	NodeList elems = doc.getElementsByTagNameNS(MMD.NS_MMD_1, "metadata");
+	NodeList elems = doc.getElementsByTagNameNS(NS.MMD_1, "metadata");
 	if (elems.getLength() == 0) {
 	    throw new ResponseException("no mmd:metadata element");
 	}
