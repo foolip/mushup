@@ -2,14 +2,15 @@ package org.foolip.mushup;
 
 import org.musicbrainz.model.Artist;
 import org.neo4j.api.core.Node;
+import org.neo4j.util.index.IndexService;
 
 public class MushArtist extends MushEntity implements Artist {
     private static final String KEY_TYPE = "type";
     private static final String KEY_NAME = "name";
     private static final String KEY_SORT_NAME = "sortName";
 
-    MushArtist(Node underlyingNode) {
-	super(underlyingNode);
+    MushArtist(Node underlyingNode, IndexService indexService) {
+	super(underlyingNode, indexService);
     }
 
     Node getUnderlyingNode() {

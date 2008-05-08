@@ -3,6 +3,7 @@ package org.foolip.mushup;
 import org.musicbrainz.model.*;
 import org.musicbrainz.webservice.*;
 import org.neo4j.api.core.*;
+import org.neo4j.util.index.IndexService;
 
 import java.util.*;
 
@@ -13,6 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public final class Info extends HttpServlet {
+
+    private NeoService neo;
+    private IndexService indexService;
+
+    public void init() throws ServletException {
+	this.neo = (NeoService)getServletContext().getAttribute("neoService");
+	this.indexService = (IndexService)getServletContext().getAttribute("indexService");
+    }
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
@@ -38,19 +47,26 @@ public final class Info extends HttpServlet {
 
 	LinkedList<MushArtist> artists = new LinkedList<MushArtist>();
 
-	NeoService neo = MushUtil.getNeoService();
-	neo.enableRemoteShell();
 	Transaction tx = Transaction.begin();
 	try {
-	    MushArtistFactory maf = new MushArtistFactory(neo);
+	    MushArtistFactory maf = new MushArtistFactory(neo, indexService);
 	    for (UUID id : artistIds) {
 		MushArtist artist = maf.getArtistById(id);
 		if (artist == null) {
-		    artist = maf.createArtist();
-		    artist.setId(id);
+		    // replicate data from MusicBrainz WebService
+		    try {
+			Query q = new Query();
+			Includes inc = new Includes();
+			inc.include("url-rels");
+			Artist mbArtist = q.getArtistById(id, inc);
+			artist = maf.copyArtist(mbArtist);
+		    } catch (WebServiceException e) {
+			throw new ServletException(e);
+		    }
 		}
 		artists.add(artist);
 	    }
+	    tx.success();
 	} finally {
 	    tx.finish();
 	}

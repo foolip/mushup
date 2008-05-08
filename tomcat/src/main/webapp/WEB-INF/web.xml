@@ -35,10 +35,16 @@
     <url-pattern>/login</url-pattern>
   </servlet-mapping>
 
+  <!-- don't XML escape JSON output -->
   <context-param>
     <param-name>atg.taglib.json.escapeXml</param-name>
     <param-value>false</param-value>
   </context-param>
+
+  <!-- start and shutdown hooks -->
+  <listener>
+    <listener-class>org.foolip.mushup.ContextListener</listener-class>
+  </listener>
 
   <session-config>
     <session-timeout>60</session-timeout>
