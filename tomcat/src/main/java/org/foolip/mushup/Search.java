@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public final class Search extends HttpServlet {
 
-    Pattern pattern; 
+    private Pattern pattern;
 
     public void init() throws ServletException {
 	this.pattern = Pattern.compile("/([^/]+)(?:/([^/]+))?");

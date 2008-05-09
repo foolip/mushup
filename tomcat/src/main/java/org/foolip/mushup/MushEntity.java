@@ -6,7 +6,7 @@ import org.neo4j.util.index.*;
 
 import java.util.UUID;
 
-abstract class MushEntity implements Entity {
+public abstract class MushEntity implements Entity {
     protected final Node underlyingNode;
     protected final IndexService indexService;
 
@@ -44,5 +44,24 @@ abstract class MushEntity implements Entity {
 	    Node urlNode = ((MushUrlRelation)urlRel).getUnderlyingNode();
 	    underlyingNode.createRelationshipTo(urlNode, relType);
 	}
+    }
+
+    public String getWikipediaUrl() {
+	for (Relationship rel : underlyingNode.getRelationships
+		 (RelTypes.Wikipedia, Direction.OUTGOING)) {
+	    Node urlNode = rel.getEndNode();
+	    if (urlNode.hasProperty("url")) {
+		String url = (String)urlNode.getProperty("url");
+		if (url.startsWith("http://en.wikipedia.org/"))
+		    return url;
+	    }
+	}
+	return null;
+    }
+
+    public String getWikipediaBlurb() {
+	String url = getWikipediaUrl;
+	
+	return null;
     }
 }

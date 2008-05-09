@@ -47,6 +47,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.htmlparser</groupId>
+      <artifactId>htmlparser</artifactId>
+      <version>1.6</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.openid4java</groupId>
       <artifactId>openid4java</artifactId>
       <version>0.9.3</version>

@@ -66,13 +66,14 @@ public final class Info extends HttpServlet {
 		}
 		artists.add(artist);
 	    }
+
+	    request.setAttribute("artists", artists);
+	    this.getServletContext().getRequestDispatcher("/json/info.jsp")
+		.forward(request, response);
+
 	    tx.success();
 	} finally {
 	    tx.finish();
 	}
-
-	request.setAttribute("artists", artists);
-	this.getServletContext().getRequestDispatcher("/json/info.jsp")
-	    .forward(request, response);
     }
 }
