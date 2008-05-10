@@ -45,8 +45,17 @@ public final class Info extends HttpServlet {
 	    }
 	}
 
+	// add returnable artists to this list
 	LinkedList<MushArtist> artists = new LinkedList<MushArtist>();
-
+	/*
+	MushArtistFactory maf = new MushArtistFactory(neo, indexService);
+	for (Iterator<UUID> it = artistIds.iterator(); it.hasNext();) {
+	    MushArtist artist = maf.getArtistById(id);
+	    if (artist != null) {
+		
+	    }
+	}
+	*/
 	Transaction tx = Transaction.begin();
 	try {
 	    MushArtistFactory maf = new MushArtistFactory(neo, indexService);
@@ -61,9 +70,11 @@ public final class Info extends HttpServlet {
 			Artist mbArtist = q.getArtistById(id, inc);
 			artist = maf.copyArtist(mbArtist);
 		    } catch (WebServiceException e) {
+			// FIXME: must handle!!!
 			throw new ServletException(e);
 		    }
 		}
+		artist.updateWikipediaBlurb();
 		artists.add(artist);
 	    }
 

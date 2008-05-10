@@ -3,7 +3,7 @@
 <json:array items="${artists}" var="artist">
   <json:object>
     <json:property name="id" value="${artist.id}"/>
-    <json:property name="name" value="${artist.name}"/>
-    <json:property name="wikipedia" value="${artist.wikipediaUrl}"/>
+    <json:property name="wikipediaUrl" value="${artist.wikipediaUrl}"/>
+    <json:property name="wikipediaBlurb" value="${artist.wikipediaBlurb}"/>
   </json:object>
 </json:array>

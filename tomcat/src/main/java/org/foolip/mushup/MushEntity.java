@@ -46,22 +46,64 @@ public abstract class MushEntity implements Entity {
 	}
     }
 
-    public String getWikipediaUrl() {
+    /* get corresponding wikipedia node in the specified language, or
+     * null if there is no such relationship */
+    private Node getWikipediaNode(String lang) {
 	for (Relationship rel : underlyingNode.getRelationships
 		 (RelTypes.Wikipedia, Direction.OUTGOING)) {
-	    Node urlNode = rel.getEndNode();
-	    if (urlNode.hasProperty("url")) {
-		String url = (String)urlNode.getProperty("url");
-		if (url.startsWith("http://en.wikipedia.org/"))
-		    return url;
+	    Node node = rel.getEndNode();
+	    if (node.hasProperty("url")) {
+		String url = (String)node.getProperty("url");
+		if (url.startsWith("http://" + lang + ".wikipedia.org/")) {
+		    return node;
+		}
 	    }
 	}
 	return null;
     }
 
+    public String getWikipediaUrl() {
+	Node node = getWikipediaNode("en");
+	if (node == null || !node.hasProperty("url"))
+	    return null;
+	return (String)node.getProperty("url");
+    }
+
+    /* connect to wikipedia and get the blurb (takes time!) */
+    public void updateWikipediaBlurb() {
+	Node node = getWikipediaNode("en");
+
+	if (node == null)
+	    return;
+
+	// FIXME: maybe add some kind of timestamp for updating
+	if (node.hasProperty("blurb"))
+	    return;
+
+	// FIXME: this error should be logged
+	if (!node.hasProperty("url"))
+	    return;
+
+	try {
+	    String url = (String)node.getProperty("url");
+	    String blurb = WikipediaBlurb.getBlurb(url);
+	    node.setProperty("blurb", blurb);
+	} catch (WikipediaException e) {
+	    // FIXME: report error
+	}
+    }
+
+    public boolean hasWikipediaBlurb() {
+	Node node = getWikipediaNode("en");
+	if (node == null || !node.hasProperty("blurb"))
+	    return null;
+	return (String)node.getProperty("blurb");
+    }
+
     public String getWikipediaBlurb() {
-	String url = getWikipediaUrl;
-	
-	return null;
+	Node node = getWikipediaNode("en");
+	if (node == null || !node.hasProperty("blurb"))
+	    return null;
+	return (String)node.getProperty("blurb");
     }
 }

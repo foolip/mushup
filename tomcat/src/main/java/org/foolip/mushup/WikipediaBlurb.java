@@ -7,12 +7,12 @@ import javax.xml.parsers.*;
 import org.xml.sax.SAXException;
 import org.w3c.dom.*;
 import org.htmlparser.*;
-import org.htmlparser.util.*;
 import org.htmlparser.filters.*;
-//import org.htmlparser.visitors.UrlModifyingVisitor;
-
+import org.htmlparser.tags.*;
+import org.htmlparser.util.*;
 
 public class WikipediaBlurb {
+    private final static int blurbLength = 200;
 
     public static String getBlurb(String url) throws WikipediaException {
 	Pattern pattern = Pattern.compile("^(http://[^.]+\\.wikipedia.org)/wiki/(.+)$");
@@ -44,6 +44,9 @@ public class WikipediaBlurb {
 	String html = ((Element)nodes.item(0)).getTextContent();
 
 	Parser parser = Parser.createParser(html, "UTF-8");
+	PrototypicalNodeFactory factory = new PrototypicalNodeFactory();
+	factory.registerTag (new SupTag());
+	parser.setNodeFactory (factory);
 
 	org.htmlparser.util.NodeList nl;
 	try {
@@ -58,23 +61,42 @@ public class WikipediaBlurb {
 	if (nl.size() == 0)
 	    throw new WikipediaException("No paragraphs in article");
 
-	// get rid of references
-	//nl.keepAllNodesThatMatch(new NotFilter(new HasAttributeFilter("class", "reference")), true);
+	// get rid of references ...
+	nl.keepAllNodesThatMatch(new NotFilter(new CssClassFilter("reference")), true);
 
-	String result = "";
+	// ... and [citation needed]
+	nl.keepAllNodesThatMatch(new NotFilter(new CssClassFilter("noprint")), true);
+
+	StringBuilder blurb = new StringBuilder();
 	for (SimpleNodeIterator i = nl.elements(); i.hasMoreNodes();) {
-	    result += i.nextNode().toHtml();
+	    blurb.append(i.nextNode().toPlainTextString().replaceAll("\\s+", " "));
+	    // FIXME: Chinese doesn't want spaces!
+	    blurb.append("\n");
 	}
 
-	return result;
-	/*
-	UrlModifyingVisitor foo = new UrlModifyingVisitor(baseUrl);
-	try {
-	    parser.visitAllNodesWith(foo);
-	} catch (ParserException e) {
-	    throw new WikipediaException(e);
+	if (blurb.length() < 10) {
+	    throw new WikipediaException("Rejecting almost empty article");
 	}
-	return foo.getModifiedResult();
-	*/
+
+	// cut at the appropriate blurb length
+	if (blurb.length() <= blurbLength) {
+	    return blurb.toString();
+	}
+
+	// remove last word
+	int lastSpace = blurb.lastIndexOf(" ", blurbLength);
+	if (blurbLength - lastSpace < 10) {
+	    return blurb.substring(0, lastSpace);
+	}
+
+	return blurb.substring(0, blurbLength);
+    }
+
+    public static final class SupTag extends CompositeTag
+    {
+	private static final String[] mIds = new String[] {"SUP"};
+	public String[] getIds () { return (mIds); }
+	public String[] getEnders () { return (mIds); }
+	public String[] getEndTagEnders () { return (new String[0]); }
     }
 }
