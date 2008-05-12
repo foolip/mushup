@@ -1,5 +1,5 @@
 function initInput() {
-    var elems = YAHOO.util.Dom.getElementsByClassName("cleardefault", "input"); 
+    var elems = YAHOO.util.Dom.getElementsByClassName("cleardefault", "input");
     for (var i=0; i<elems.length; i++) {
 	if (elems[i].type == "text") {
 	    elems[i].defaultValue = elems[i].value;
