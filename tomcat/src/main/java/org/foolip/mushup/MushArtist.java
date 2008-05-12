@@ -8,6 +8,7 @@ public class MushArtist extends MushEntity implements Artist {
     private static final String KEY_TYPE = "type";
     private static final String KEY_NAME = "name";
     private static final String KEY_SORT_NAME = "sortName";
+    private static final String KEY_DISAMBIGUATION = "disambiguation";
 
     MushArtist(Node underlyingNode, IndexService indexService) {
 	super(underlyingNode, indexService);
@@ -39,5 +40,13 @@ public class MushArtist extends MushEntity implements Artist {
 
     public void setSortName(String sortName) {
 	underlyingNode.setProperty(KEY_SORT_NAME, sortName);
+    }
+
+    public String getDisambiguation() {
+	return (String)underlyingNode.getProperty(KEY_DISAMBIGUATION);
+    }
+
+    public void setDisambiguation(String disamb) {
+	underlyingNode.setProperty(KEY_DISAMBIGUATION, disamb);
     }
 }

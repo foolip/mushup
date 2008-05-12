@@ -33,9 +33,10 @@ public final class Search extends HttpServlet {
       throws IOException, ServletException {
 	Iterable<ArtistResult> result;
 	try {
-	    Query q = new Query();
+	    Query q = MushQuery.getInstance();
 	    ArtistFilter af = new ArtistFilter();
 	    af.setName(query);
+	    af.setLimit(12);
 	    result = q.getArtists(af);
 	} catch (WebServiceException e) {
 	    response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage());
@@ -53,15 +54,17 @@ public final class Search extends HttpServlet {
                       HttpServletResponse response)
       throws IOException, ServletException {
 
-	String format = request.getParameter("format");
-	if (format == null || !format.equals("json"))
-	    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-
 	String path = request.getPathInfo();
 	if (path != null) {
 	    // figure out if unified or artist/release/track search is wanted
 	    Matcher m = pattern.matcher(path);
 	    if (m.matches()) {
+		String format = request.getParameter("format");
+		if (format == null || !format.equals("json")) {
+		    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "format must be json");
+		    return;
+		}
+
 		if (m.group(2) == null) {
 		    unifiedSearch(request, response, m.group(1), format);
 		    return;

@@ -27,6 +27,15 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>ShowArtist</servlet-name>
+    <servlet-class>org.foolip.mushup.ShowArtist</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ShowArtist</servlet-name>
+    <url-pattern>/artist/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>OpenID Login</servlet-name>
     <servlet-class>org.foolip.mushup.ConsumerServlet</servlet-class>
     </servlet>

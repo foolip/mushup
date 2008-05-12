@@ -64,17 +64,23 @@ public class WikipediaBlurb {
 	// get rid of references ...
 	nl.keepAllNodesThatMatch(new NotFilter(new CssClassFilter("reference")), true);
 
-	// ... and [citation needed]
+	// ... [citation needed] ...
 	nl.keepAllNodesThatMatch(new NotFilter(new CssClassFilter("noprint")), true);
+
+	// ... and [n]
+	nl.keepAllNodesThatMatch(new NotFilter(new CssClassFilter("autonumber")), true);
 
 	StringBuilder blurb = new StringBuilder();
 	for (SimpleNodeIterator i = nl.elements(); i.hasMoreNodes();) {
-	    blurb.append(i.nextNode().toPlainTextString().replaceAll("\\s+", " "));
+	    String plainText = Translate.decode(i.nextNode().toPlainTextString());
+	    blurb.append(plainText.replaceAll("\\s+", " "));
 	    // FIXME: Chinese doesn't want spaces!
-	    blurb.append("\n");
+	    blurb.append(" ");
+	    if (blurb.length() > blurbLength)
+		break;
 	}
 
-	if (blurb.length() < 10) {
+	if (blurb.length() < 20) {
 	    throw new WikipediaException("Rejecting almost empty article");
 	}
 
@@ -85,7 +91,7 @@ public class WikipediaBlurb {
 
 	// remove last word
 	int lastSpace = blurb.lastIndexOf(" ", blurbLength);
-	if (blurbLength - lastSpace < 10) {
+	if (blurbLength - lastSpace < 20) {
 	    return blurb.substring(0, lastSpace);
 	}
 

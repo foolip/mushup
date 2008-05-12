@@ -70,7 +70,7 @@ public abstract class MushEntity implements Entity {
     }
 
     /* connect to wikipedia and get the blurb (takes time!) */
-    public void updateWikipediaBlurb() {
+    public void updateWikipediaBlurb() throws WikipediaException {
 	Node node = getWikipediaNode("en");
 
 	if (node == null)
@@ -84,20 +84,9 @@ public abstract class MushEntity implements Entity {
 	if (!node.hasProperty("url"))
 	    return;
 
-	try {
-	    String url = (String)node.getProperty("url");
-	    String blurb = WikipediaBlurb.getBlurb(url);
-	    node.setProperty("blurb", blurb);
-	} catch (WikipediaException e) {
-	    // FIXME: report error
-	}
-    }
-
-    public boolean hasWikipediaBlurb() {
-	Node node = getWikipediaNode("en");
-	if (node == null || !node.hasProperty("blurb"))
-	    return null;
-	return (String)node.getProperty("blurb");
+	String url = (String)node.getProperty("url");
+	String blurb = WikipediaBlurb.getBlurb(url);
+	node.setProperty("blurb", blurb);
     }
 
     public String getWikipediaBlurb() {

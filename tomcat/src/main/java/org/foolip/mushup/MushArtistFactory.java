@@ -36,6 +36,10 @@ public class MushArtistFactory extends MushEntityFactory implements ArtistFactor
 	mushArtist.setId(artist.getId());
 	mushArtist.setName(artist.getName());
 	mushArtist.setSortName(artist.getSortName());
+	String disamb = artist.getDisambiguation();
+	if (disamb != null) {
+	    mushArtist.setDisambiguation(disamb);
+	}
 
 	copyRelations(artist, mushArtist);
 

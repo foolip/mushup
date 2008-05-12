@@ -22,6 +22,15 @@ public final class ContextListener implements ServletContextListener {
 	log.debug("Starting index service");
 	IndexService indexService = new NeoIndexService(neo);
 	event.getServletContext().setAttribute("indexService", indexService);
+
+	Transaction tx = Transaction.begin();
+	try {
+	    Replicator repl = new Replicator(neo, indexService);
+	    event.getServletContext().setAttribute("replicator", repl);
+	    tx.success();
+	} finally {
+	    tx.finish();
+	}
     }
 
     public void contextDestroyed(ServletContextEvent event) {
