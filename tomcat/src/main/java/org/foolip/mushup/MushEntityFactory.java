@@ -25,12 +25,12 @@ abstract class MushEntityFactory implements EntityFactory {
 	}
     }
 
-    protected void copyRelations(Entity entity, MushEntity mushEntity) {
-	for (UrlRelation urlRel : entity.getUrlRelations()) {
+    protected void copyRelations(Entity source, Entity target) {
+	for (UrlRelation urlRel : source.getUrlRelations()) {
 	    MushUrlRelation mushUrlRel = new MushUrlRelation(neo.createNode());
 	    mushUrlRel.setType(urlRel.getType());
 	    mushUrlRel.setUrl(urlRel.getUrl());
-	    mushEntity.addUrlRelation(mushUrlRel);
+	    target.addUrlRelation(mushUrlRel);
 	}
     }
 }

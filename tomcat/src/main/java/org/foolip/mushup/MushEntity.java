@@ -11,6 +11,7 @@ public abstract class MushEntity implements Entity {
     protected final IndexService indexService;
 
     private static final String KEY_MBID = "mbid";
+    private static final String KEY_REPLICATED = "replicated";
 
     MushEntity(Node underlyingNode, IndexService indexService) {
         this.underlyingNode = underlyingNode;
@@ -30,6 +31,14 @@ public abstract class MushEntity implements Entity {
 
 	// FIXME: remove possible old value?
 	indexService.index(underlyingNode, "UUID", id.getLeastSignificantBits());
+    }
+
+    public void setReplicated() {
+	underlyingNode.setProperty(KEY_REPLICATED, true);
+    }
+
+    public boolean isReplicated() {
+	return underlyingNode.hasProperty(KEY_REPLICATED);
     }
 
     public Iterable<UrlRelation> getUrlRelations() {

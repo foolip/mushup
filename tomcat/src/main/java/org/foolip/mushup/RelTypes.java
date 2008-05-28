@@ -4,7 +4,7 @@ import org.neo4j.api.core.*;
 
 enum RelTypes implements RelationshipType
 {
-    MUSICBRAINZ, ARTISTS, ARTIST,
+    MUSICBRAINZ, ARTISTS, ARTIST, RELEASES, RELEASE,
     // MusicBrainz relationships
     Wikipedia
 }

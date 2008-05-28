@@ -67,19 +67,13 @@ public final class Info extends HttpServlet {
 	for (UUID id : artistIds) {
 	    Transaction tx = Transaction.begin();
 	    try {
-		MushArtist artist = maf.getArtistById(id);
-		if (artist == null) {
-		    // replicate data from MusicBrainz WebService
+		MushArtist artist = maf.getOrCreateArtist(id);
+		if (!artist.isReplicated()) {
 		    try {
-			Query q = MushQuery.getInstance();
-			Includes inc = new Includes();
-			inc.include("url-rels");
-			Artist mbArtist = q.getArtistById(id, inc);
-			artist = maf.copyArtist(mbArtist);
+			maf.replicate(artist);
 		    } catch (WebServiceException e) {
 			log.error(e);
 			tx.failure();
-			continue;
 		    }
 		}
 

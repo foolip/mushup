@@ -38,7 +38,7 @@ public final class ShowArtist extends HttpServlet {
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
-      throws IOException, ServletException {
+	throws IOException, ServletException {
 
 	UUID id;
 	try {
@@ -49,30 +49,24 @@ public final class ShowArtist extends HttpServlet {
 	}
 
 	Transaction tx = Transaction.begin();
-	MushArtist artist;
 	try {
-	    artist = maf.getArtistById(id);
-	    if (artist == null) {
-		// replicate data from MusicBrainz WebService
+	    MushArtist artist = maf.getOrCreateArtist(id);
+	    if (!artist.isReplicated()) {
 		try {
-		    Query q = MushQuery.getInstance();
-		    Includes inc = new Includes();
-		    inc.include("url-rels");
-		    inc.include("sa-Album");
-		    Artist mbArtist = q.getArtistById(id, inc);
-		    artist = maf.copyArtist(mbArtist);
+		    maf.replicate(artist);
 		} catch (WebServiceException e) {
-		    response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage());
-		    return;
+		    log.error(e);
+		    tx.failure();
 		}
 	    }
+
+	    request.setAttribute("artist", artist);
+	    this.getServletContext().getRequestDispatcher("/showArtist.jsp")
+		.forward(request, response);
+
 	    tx.success();
 	} finally {
 	    tx.finish();
 	}
-
-	request.setAttribute("artist", artist);
-	this.getServletContext().getRequestDispatcher("/showArtist.jsp")
-	    .forward(request, response);
     }
 }

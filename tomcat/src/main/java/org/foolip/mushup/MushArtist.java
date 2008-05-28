@@ -1,8 +1,12 @@
 package org.foolip.mushup;
 
-import org.musicbrainz.model.Artist;
+import org.musicbrainz.model.*;
 import org.neo4j.api.core.Node;
+import org.neo4j.api.core.Relationship;
+import org.neo4j.api.core.Direction;
 import org.neo4j.util.index.IndexService;
+
+import java.util.*;
 
 public class MushArtist extends MushEntity implements Artist {
     private static final String KEY_TYPE = "type";
@@ -12,10 +16,6 @@ public class MushArtist extends MushEntity implements Artist {
 
     MushArtist(Node underlyingNode, IndexService indexService) {
 	super(underlyingNode, indexService);
-    }
-
-    Node getUnderlyingNode() {
-        return underlyingNode;
     }
 
     public String getType() {
@@ -48,5 +48,19 @@ public class MushArtist extends MushEntity implements Artist {
 
     public void setDisambiguation(String disamb) {
 	underlyingNode.setProperty(KEY_DISAMBIGUATION, disamb);
+    }
+
+    public Iterable<Release> getReleases() {
+	// FIXME: why does this suck so badly?
+	LinkedList<Release> releases = new LinkedList<Release>();
+	for (Relationship rel : underlyingNode.
+		 getRelationships(RelTypes.RELEASE, Direction.OUTGOING)) {
+	    releases.add(new MushRelease(rel.getEndNode(), this.indexService));
+	}
+	return releases;
+    }
+
+    public void addRelease(Release rel) {
+	underlyingNode.createRelationshipTo(((MushRelease)rel).getUnderlyingNode(), RelTypes.RELEASE);
     }
 }

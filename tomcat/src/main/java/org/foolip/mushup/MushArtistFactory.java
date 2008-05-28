@@ -1,6 +1,7 @@
 package org.foolip.mushup;
 
 import org.musicbrainz.model.*;
+import org.musicbrainz.webservice.*;
 import org.neo4j.api.core.*;
 import org.neo4j.util.index.IndexService;
 
@@ -31,25 +32,49 @@ public class MushArtistFactory extends MushEntityFactory implements ArtistFactor
         return new MushArtist(node, indexService);
     }
 
-    public MushArtist copyArtist(Artist artist) {
-	MushArtist mushArtist = createArtist();
-	mushArtist.setId(artist.getId());
-	mushArtist.setName(artist.getName());
-	mushArtist.setSortName(artist.getSortName());
-	String disamb = artist.getDisambiguation();
-	if (disamb != null) {
-	    mushArtist.setDisambiguation(disamb);
-	}
-
-	copyRelations(artist, mushArtist);
-
-	return mushArtist;
-    }
-
     public MushArtist getArtistById(UUID id) {
 	Node node = indexService.getSingleNode("UUID", id.getLeastSignificantBits());
 	if (node == null)
 	    return null;
 	return new MushArtist(node, indexService);
+    }
+
+    public synchronized MushArtist getOrCreateArtist(UUID id) {
+	MushArtist artist = getArtistById(id);
+	if (artist == null) {
+	    artist = createArtist();
+	    artist.setId(id);
+	}
+	return artist;
+    }
+
+    public void replicate(MushArtist mushArtist) throws WebServiceException {
+	Query q = MushQuery.getInstance();
+	Includes inc = new Includes();
+	inc.include("url-rels");
+	inc.include("sa-Album");
+	Artist mbArtist = q.getArtistById(mushArtist.getId(), inc);
+
+	mushArtist.setId(mbArtist.getId());
+	mushArtist.setName(mbArtist.getName());
+	mushArtist.setSortName(mbArtist.getSortName());
+	String disamb = mbArtist.getDisambiguation();
+	if (disamb != null)
+	    mushArtist.setDisambiguation(disamb);
+
+	MushReleaseFactory mrf = new MushReleaseFactory(neo, indexService);
+	for (Release rel : mbArtist.getReleases()) {
+	    MushRelease mushRel = mrf.createRelease();
+	    mushRel.setId(rel.getId());
+	    mushRel.setTitle(rel.getTitle());
+	    String asin = rel.getAsin();
+	    if (asin != null)
+		mushRel.setAsin(asin);
+	    mushArtist.addRelease(mushRel);
+	}
+
+	copyRelations(mbArtist, mushArtist);
+
+	mushArtist.setReplicated();
     }
 }
