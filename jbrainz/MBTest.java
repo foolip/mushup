@@ -11,6 +11,7 @@ public class MBTest {
 	UUID id = UUID.fromString("b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d");
 	Includes inc = new Includes();
 	inc.include("url-rels");
+	inc.include("sa-Album");
 	a = q.getArtistById(id, inc);
 	print(a);
 
@@ -34,6 +35,9 @@ public class MBTest {
 	System.out.println("Sort Name: " + a.getSortName());
 	for (UrlRelation urlRel : a.getUrlRelations()) {
 	    System.out.println(urlRel.getType() + ": " + urlRel.getUrl());
+	}
+	for (Release rel : a.getReleases()) {
+	    System.out.println(rel.getTitle());
 	}
     }
 
