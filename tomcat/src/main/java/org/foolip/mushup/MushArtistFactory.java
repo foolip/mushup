@@ -48,7 +48,10 @@ public class MushArtistFactory extends MushEntityFactory implements ArtistFactor
 	return artist;
     }
 
-    public void replicate(MushArtist mushArtist) throws WebServiceException {
+    public synchronized void replicate(MushArtist mushArtist) throws WebServiceException {
+	if (mushArtist.isReplicated())
+	    return;
+
 	Query q = MushQuery.getInstance();
 	Includes inc = new Includes();
 	inc.include("url-rels");

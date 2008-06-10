@@ -57,6 +57,8 @@ public final class ShowArtist extends HttpServlet {
 		} catch (WebServiceException e) {
 		    log.error(e);
 		    tx.failure();
+		    response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage());
+		    return;
 		}
 	    }
 

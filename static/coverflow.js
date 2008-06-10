@@ -1,30 +1,3 @@
-/*
-var coverURLs = ["http://upload.wikimedia.org/wikipedia/en/a/a4/PleasePleaseMe.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/0/0a/Withthebeatlescover.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/e/e6/HardDayUK.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/4/40/Beatlesforsale.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/1/1e/HelpUK.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/7/73/RubberSoulUK.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/1/16/Revolver.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/6/67/Pepper's.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/4/4c/The_BEATLES_Cover_Art_Remastered.png",
-		 "http://upload.wikimedia.org/wikipedia/en/a/ac/TheBeatles-YellowSubmarinealbumcover.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/4/42/Beatles_-_Abbey_Road.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/2/25/LetItBe.jpg"];
-*/
-var coverURLs = ["http://upload.wikimedia.org/wikipedia/en/thumb/a/a4/PleasePleaseMe.jpg/200px-PleasePleaseMe.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/thumb/0/0a/Withthebeatlescover.jpg/200px-Withthebeatlescover.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/thumb/e/e6/HardDayUK.jpg/200px-HardDayUK.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/4/40/Beatlesforsale.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/1/1e/HelpUK.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/thumb/7/73/RubberSoulUK.jpg/200px-RubberSoulUK.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/thumb/1/16/Revolver.jpg/200px-Revolver.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/thumb/6/67/Pepper's.jpg/200px-Pepper's.jpg",
-		 "http://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/The_White_Album.svg/200px-The_White_Album.svg.png",
-		 "http://upload.wikimedia.org/wikipedia/en/thumb/a/ac/TheBeatles-YellowSubmarinealbumcover.jpg/200px-TheBeatles-YellowSubmarinealbumcover.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/thumb/4/42/Beatles_-_Abbey_Road.jpg/200px-Beatles_-_Abbey_Road.jpg",
-		 "http://upload.wikimedia.org/wikipedia/en/thumb/2/25/LetItBe.jpg/200px-LetItBe.jpg"];
-
 var coverImages = [];
 var coverOffset = 0;
 var ftw;
@@ -45,8 +18,6 @@ function initCanvas() {
 	coverImages[coverImages.length] = covers[x];
     }
 
-    //loadCovers();
-
     ftw = new Image();
     ftw.addEventListener("load", paint, false);
     ftw.src = "/static/fadetowhite.png";
@@ -54,58 +25,59 @@ function initCanvas() {
 }
 YAHOO.util.Event.onDOMReady(initCanvas);
 
-function loadCovers() {
-    
-
-    for (var i = 0; i < coverURLs.length; i++) {
-	var im = new Image();
-	im.addEventListener("load", paint, false);
-	im.src = coverURLs[i];
-	coverImages[i] = im;
-    }
-}
-
-/* context ctx
- * centerline x
- * baseline y
- * maximum width/height size
- */
-function putCoverAt(ctx, img, x, y, size) {
-    ctx.save();
-    ctx.translate(x, -y);
-    // draw cover
-    ctx.drawImage(img, -size/2, -size, size, size);
-    // draw reflection
-    ctx.save();
-    ctx.scale(1, -1);
-    ctx.globalAlpha = 0.2;
-    ctx.drawImage(img, -size/2, -size, size, size);
-    ctx.restore();
-    // fade reflection to white
-    ctx.drawImage(ftw, -size/2, 0, size, size);
-    ctx.restore();
-}
-
-/* helper function simplify animation */
+/* helper function to simplify animation */
 function putCover(ctx, img, n) {
+    var width = ctx.canvas.getAttribute("width");
+    var height = ctx.canvas.getAttribute("height");
+
     // figure out the correct x, y and size
-    var x;
-    var y;
+    var x = width/2;
+    var y = height/2;
     var size;
     if (Math.abs(n) < 1) {
-	x = n*160;
-	y = Math.abs(n)*20;
+	x += n*160;
+	y -= Math.abs(n)*20;
 	size = 160 - Math.abs(n)*40;
     } else {
 	if (n < 0)
-	    x = n*140-20;
+	    x += n*140-20;
 	else
-	    x = n*140+20;
-	y = 20;
+	    x += n*140+20;
+	y -= 20;
 	size = 120;
     }
 
-    putCoverAt(ctx, img, x, y, size);
+    x = Math.round(x-size/2); // left
+    y = Math.round(y); // bottom
+    size = Math.round(size);
+    /*
+    if (img.canvasSize == size &&
+	img.canvasX >= 0 &&
+	img.canvasX <= width-size) {
+	// reuse old
+	if (img.canvasX == x && img.canvasY == y)
+	    return;
+	ctx.drawImage(ctx.canvas, img.canvasX, img.canvasY-size, size, size*2,
+		      x, y-size, size, size*2);
+	return;
+    }
+    */
+    // draw cover
+    ctx.drawImage(img, x, y-size, size, size);
+    // draw reflection
+    ctx.save();
+    ctx.translate(0, y);
+    ctx.scale(1, -1);
+    ctx.translate(0, -y);
+    ctx.drawImage(img, x, y-size, size, size);
+    ctx.restore();
+    // fade reflection to white
+    ctx.drawImage(ftw, x, y, size, size);
+    /*
+    img.canvasX = x;
+    img.canvasY = y;
+    img.canvasSize = size;
+    */
 }
 
 function paint() {
@@ -116,13 +88,10 @@ function paint() {
 
     ctx.clearRect(0, 0, width, height);
 
-    ctx.save();
-    ctx.translate(width/2, height/2);
     for (var i = 0; i < coverImages.length; i++) {
 	if (Math.abs(i-coverOffset) < 3)
-	    putCover(ctx, coverImages[i], i-coverOffset);
+	    putCover(ctx, coverImages[i], i-coverOffset, width/2, height/2);
     }
-    ctx.restore();
 }
 
 function animateCovers() {
