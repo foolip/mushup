@@ -6,7 +6,7 @@ import java.util.*;
 import org.w3c.dom.Node;
 
 class MMDArtist extends MMDEntity implements Artist {
-    private String type;
+    private Type type;
     private String name;
     private String sortName;
     private String disamb;
@@ -15,7 +15,13 @@ class MMDArtist extends MMDEntity implements Artist {
     MMDArtist(Node node) throws ResponseException {
 	super(node);
 
-	setType(MMD.getUriAttr(node, "type", NS.MMD_1));
+	String typeUri = MMD.getUriAttr(node, "type", NS.MMD_1);
+	if (typeUri == null)
+	    setType(Type.UNKNOWN);
+	else if (typeUri.equals("http://musicbrainz.org/ns/mmd-1.0#Person"))
+	    setType(Type.PERSON);
+	else if (typeUri.equals("http://musicbrainz.org/ns/mmd-1.0#Group"))
+	    setType(Type.GROUP);
 
 	this.releases = new LinkedList<Release>();
 	for (Node n : MMD.iter(node.getChildNodes())) {
@@ -35,11 +41,11 @@ class MMDArtist extends MMDEntity implements Artist {
 	}
     }
 
-    public String getType() {
+    public Type getType() {
 	return this.type;
     }
 
-    public void setType(String type) {
+    public void setType(Type type) {
 	this.type = type;
     }
     

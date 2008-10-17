@@ -38,7 +38,7 @@ public class WebServiceTest
 	UUID id = UUID.fromString("b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d");
 	Artist a = new Query().getArtistById(id);
 	assertEquals("MBID", id, a.getId());
-	assertEquals("Type", "http://musicbrainz.org/ns/mmd-1.0#Group", a.getType());
+	assertEquals("Type", Artist.Type.GROUP, a.getType());
 	assertEquals("Name", "The Beatles", a.getName());
 	assertEquals("Sort Name", "Beatles, The", a.getSortName());
     }

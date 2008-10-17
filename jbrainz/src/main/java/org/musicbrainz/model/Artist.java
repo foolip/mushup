@@ -1,11 +1,10 @@
 package org.musicbrainz.model;
 
 public interface Artist extends Entity {
-    public static final String TYPE_PERSON = "http://musicbrainz.org/ns/mmd-1.0#Person";
-    public static final String TYPE_GROUP = "http://musicbrainz.org/ns/mmd-1.0#Group";
+    public enum Type { UNKNOWN, PERSON, GROUP }
 
-    public String getType();
-    public void setType(String type);
+    public Type getType();
+    public void setType(Type type);
     
     public String getName();
     public void setName(String name);
