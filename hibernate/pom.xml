@@ -33,11 +33,18 @@
       <version>1.0-b7-SNAPSHOT</version>
     </dependency>
 
-    <dependency>
+	<dependency>
       <groupId>org.neo4j</groupId>
       <artifactId>index-util</artifactId>
       <version>0.5-SNAPSHOT</version>
     </dependency>
+
+	<!-- for neo shell -->
+	<dependency>
+		<groupId>jline</groupId>
+		<artifactId>jline</artifactId>
+		<version>0.9.94</version>
+	</dependency>
 
     <dependency>
       <groupId>org.hibernate</groupId>
