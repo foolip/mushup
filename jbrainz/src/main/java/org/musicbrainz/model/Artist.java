@@ -1,7 +1,7 @@
 package org.musicbrainz.model;
 
 public interface Artist extends Entity {
-    public enum Type { UNKNOWN, PERSON, GROUP }
+    public static enum Type { UNKNOWN, PERSON, GROUP }
 
     public Type getType();
     public void setType(Type type);
@@ -14,6 +14,9 @@ public interface Artist extends Entity {
     
     public String getDisambiguation();
     public void setDisambiguation(String disamb);
+
+    public Iterable<? extends ArtistAlias> getAliases();
+    public void addAlias(ArtistAlias alias);
 
     public Iterable<Release> getReleases();
     public void addRelease(Release rel);

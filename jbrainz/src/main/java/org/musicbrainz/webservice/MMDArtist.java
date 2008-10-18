@@ -80,4 +80,14 @@ class MMDArtist extends MMDEntity implements Artist {
     public void addRelease(Release rel) {
 	this.releases.add(rel);
     }
+
+	public void addAlias(ArtistAlias alias) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Iterable<ArtistAlias> getAliases() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
