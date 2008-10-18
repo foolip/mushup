@@ -1,4 +1,4 @@
-package org.musicbrainz.test;
+package org.musicbrainz.util;
 
 import org.hibernate.*;
 import org.musicbrainz.model.*;
@@ -10,7 +10,7 @@ import org.neo4j.util.index.*;
 
 import java.util.*;
 
-public class HibernateTest {
+public class Replicator {
 	public static void main(String[] args) {
 		System.out.println("Starting neo service");
 		NeoService neo = new EmbeddedNeo("neostore");

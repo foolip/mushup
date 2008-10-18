@@ -1,4 +1,4 @@
-package org.musicbrainz.test;
+package org.musicbrainz.util;
 
 import org.hibernate.*;
 import org.hibernate.cfg.*;
