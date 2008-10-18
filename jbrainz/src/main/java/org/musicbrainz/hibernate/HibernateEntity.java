@@ -4,11 +4,9 @@ import org.musicbrainz.model.*;
 
 import java.util.UUID;
 
-public class HibernateEntity implements Entity {
+public abstract class HibernateEntity implements Entity {
 	private int row;
 	private UUID mbid;
-
-	public HibernateEntity() {}
 
 	public int getRow() {
 		return this.row;

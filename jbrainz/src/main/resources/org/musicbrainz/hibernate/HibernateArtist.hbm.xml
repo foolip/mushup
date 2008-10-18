@@ -19,9 +19,14 @@
 		<property name="sortName" type="string" column="sortname" />
 		<property name="disambiguation" type="string" column="resolution" />
 
-		<set name="aliasesSet" table="artistalias">
+		<set name="aliases" table="artistalias">
 			<key column="ref"/>
 			<one-to-many class="HibernateArtistAlias"/>
+		</set>
+
+		<set name="releases" table="album">
+			<key column="artist"/>
+			<one-to-many class="HibernateRelease"/>
 		</set>
 	</class>
 

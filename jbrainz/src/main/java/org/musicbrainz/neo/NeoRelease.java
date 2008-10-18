@@ -12,7 +12,17 @@ public class NeoRelease extends NeoEntity implements Release {
 	NeoRelease(NeoService neo, Node node, IndexService indexService) {
 		super(neo, node, indexService);
 	}
-
+	
+	public NeoArtist getArtist() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public void setArtist(Artist artist) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	public String getTitle() {
 		return (String)getUnderlyingNode().getProperty(KEY_TITLE);
 	}

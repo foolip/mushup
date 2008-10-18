@@ -3,8 +3,6 @@ package org.musicbrainz.hibernate;
 import org.musicbrainz.model.Artist;
 import org.musicbrainz.model.ArtistAlias;
 import org.musicbrainz.model.Release;
-import org.musicbrainz.model.UrlRelation;
-
 import java.util.Set;
 import java.util.HashSet;
 
@@ -13,9 +11,13 @@ public class HibernateArtist extends HibernateEntity implements Artist {
 	private String name;
 	private String sortName;
 	private String disamb;
-	private Set<HibernateArtistAlias> aliases = new HashSet<HibernateArtistAlias>();
+	private Set<HibernateArtistAlias> aliases;
+	private Set<HibernateRelease> releases;
 	
-	public HibernateArtist() {}
+	public HibernateArtist() {
+		aliases = new HashSet<HibernateArtistAlias>();
+		releases = new HashSet<HibernateRelease>();
+	}
 
 	public Type getType() {
 		return this.type;
@@ -49,27 +51,27 @@ public class HibernateArtist extends HibernateEntity implements Artist {
 		this.disamb = disamb;
 	}
 
-	public Iterable<Release> getReleases() {
-		return null;
+	public void setReleases(Set<HibernateRelease> releases) {
+		this.releases = releases;
+	}
+	
+	public Set<HibernateRelease> getReleases() {
+		return releases;
 	}
 
-	public void addRelease(Release rel) {
-
+	public void addRelease(Release release) {
+		getReleases().add((HibernateRelease)release);
 	}
 
-	public void setAliasesSet(Set<HibernateArtistAlias> aliases) {
+	public void setAliases(Set<HibernateArtistAlias> aliases) {
 		this.aliases = aliases;
 	}
 
-	public Set<HibernateArtistAlias> getAliasesSet() {
+	public Set<HibernateArtistAlias> getAliases() {
 		return aliases;
 	}
 
 	public void addAlias(ArtistAlias alias) {
-		getAliasesSet().add((HibernateArtistAlias)alias);
-	}
-
-	public Iterable<HibernateArtistAlias> getAliases() {
-		return getAliasesSet();
+		getAliases().add((HibernateArtistAlias)alias);
 	}
 }

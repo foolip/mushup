@@ -18,6 +18,6 @@ public interface Artist extends Entity {
     public Iterable<? extends ArtistAlias> getAliases();
     public void addAlias(ArtistAlias alias);
 
-    public Iterable<Release> getReleases();
-    public void addRelease(Release rel);
+    public Iterable<? extends Release> getReleases();
+    public void addRelease(Release release);
 }

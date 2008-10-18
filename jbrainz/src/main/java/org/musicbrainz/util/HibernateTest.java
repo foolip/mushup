@@ -3,8 +3,7 @@ package org.musicbrainz.test;
 import org.hibernate.*;
 import org.musicbrainz.model.*;
 import org.musicbrainz.hibernate.*;
-import org.musicbrainz.neo.NeoArtistAliasFactory;
-import org.musicbrainz.neo.NeoArtistFactory;
+import org.musicbrainz.neo.*;
 import org.neo4j.api.core.*;
 import org.neo4j.api.core.Transaction;
 import org.neo4j.util.index.*;
@@ -20,10 +19,12 @@ public class HibernateTest {
 		Transaction tx;
 		ArtistFactory artistFactory;
 		ArtistAliasFactory artistAliasFactory;
+		ReleaseFactory releaseFactory;
 		tx = neo.beginTx();
 		try {
 		    artistFactory = new NeoArtistFactory(neo, indexService);
 		    artistAliasFactory = new NeoArtistAliasFactory(neo, indexService);
+		    releaseFactory = new NeoReleaseFactory(neo, indexService);
 		    tx.success();
 		} finally {
 		    tx.finish();
@@ -54,6 +55,13 @@ public class HibernateTest {
 						ArtistAlias targetAlias = artistAliasFactory.createArtistAlias();
 						targetAlias.setName(sourceAlias.getName());
 						targetArtist.addAlias(targetAlias);
+					}
+					for (HibernateRelease sourceRelease : sourceArtist.getReleases()) {
+						System.out.println("\trelease #" + sourceRelease.getRow() + " " + sourceRelease.getTitle());
+						Release targetRelease = releaseFactory.createRelease();
+						targetRelease.setId(sourceRelease.getId());
+						targetRelease.setTitle(sourceRelease.getTitle());
+						targetArtist.addRelease(targetRelease);
 					}
 				}
 				tx.success();
