@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.musicbrainz.hibernate">
+
+	<class name="HibernateArtist" table="artist">
+		<comment>MusicBrainz Artist.</comment>
+
+		<id name="row" column="id">
+			<generator class="sequence">
+				<param name="sequence">artist_id_seq</param>
+			</generator>
+		</id>
+
+		<property name="uuid" type="org.musicbrainz.hibernate.UserUUID" column="gid" />
+		<property name="type" type="org.musicbrainz.hibernate.UserArtistType" column="type" />
+		<property name="name" type="string" column="name" />
+		<property name="sortName" type="string" column="sortname" />
+		<property name="disambiguation" type="string" column="resolution" />
+
+		<set name="aliasesSet" table="artistalias">
+			<key column="ref"/>
+			<one-to-many class="HibernateArtistAlias"/>
+		</set>
+	</class>
+
+</hibernate-mapping>
