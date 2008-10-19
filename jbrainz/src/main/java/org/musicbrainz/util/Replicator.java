@@ -12,6 +12,7 @@ import java.util.*;
 
 public class Replicator {
 	public static void main(String[] args) {
+		/*
 		System.out.println("Starting neo service");
 		NeoService neo = new EmbeddedNeo("neostore");
 		System.out.println("Starting index service");
@@ -20,63 +21,80 @@ public class Replicator {
 		ArtistFactory artistFactory;
 		ArtistAliasFactory artistAliasFactory;
 		ReleaseFactory releaseFactory;
+		TrackFactory trackFactory;
 		tx = neo.beginTx();
 		try {
 		    artistFactory = new NeoArtistFactory(neo, indexService);
 		    artistAliasFactory = new NeoArtistAliasFactory(neo, indexService);
 		    releaseFactory = new NeoReleaseFactory(neo, indexService);
+		    trackFactory = new NeoTrackFactory(neo, indexService);
 		    tx.success();
 		} finally {
 		    tx.finish();
 		}
-		
+		*/
+
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
 		session.beginTransaction();
 
-		Iterator artists = session.createQuery("from HibernateArtist").iterate();
-		int limit = 1000;
-		while (artists.hasNext() && limit > 0) {
+		Query q = session.createQuery("from HibernateArtist order by row");
+		q.setFetchSize(100).setFirstResult(0).setMaxResults(100);
+		Iterator<?> artists = q.iterate();
+		int count = 0;
+		while (artists.hasNext() && count++ < 1000) {
 			// copy to neo
-			tx = neo.beginTx();
+			//tx = neo.beginTx();
 			try {
-				int batch = 128;
-				while(artists.hasNext() && batch-- > 0 && limit-- > 0) {
-					HibernateArtist sourceArtist = (HibernateArtist)artists.next();
-					System.out.println("artist #" + sourceArtist.getRow() + " " + sourceArtist.getName());
-					Artist targetArtist = artistFactory.createArtist();
-					targetArtist.setId(sourceArtist.getId());
+				Artist sourceArtist = (Artist)artists.next();
+				System.out.println("artist " + sourceArtist.getName());
+				/*
+				Artist targetArtist = artistFactory.createArtist();
+				targetArtist.setId(sourceArtist.getId());
+				if (sourceArtist.getType() != Artist.Type.UNKNOWN)
 					targetArtist.setType(sourceArtist.getType());
-					targetArtist.setName(sourceArtist.getName());
-					targetArtist.setSortName(sourceArtist.getSortName());
+				targetArtist.setName(sourceArtist.getName());
+				targetArtist.setSortName(sourceArtist.getSortName());
+				if (sourceArtist.getDisambiguation() != null)
 					targetArtist.setDisambiguation(sourceArtist.getDisambiguation());
-					for (HibernateArtistAlias sourceAlias : sourceArtist.getAliases()) {
-						System.out.println("\talias #" + sourceAlias.getRow() + " " + sourceAlias.getName());
-						ArtistAlias targetAlias = artistAliasFactory.createArtistAlias();
-						targetAlias.setName(sourceAlias.getName());
-						targetArtist.addAlias(targetAlias);
-					}
-					for (HibernateRelease sourceRelease : sourceArtist.getReleases()) {
-						System.out.println("\trelease #" + sourceRelease.getRow() + " " + sourceRelease.getTitle());
-						Release targetRelease = releaseFactory.createRelease();
-						targetRelease.setId(sourceRelease.getId());
-						targetRelease.setTitle(sourceRelease.getTitle());
-						targetArtist.addRelease(targetRelease);
-					}
+					*/
+				/*
+				for (ArtistAlias sourceAlias : sourceArtist.getAliases()) {
+					System.out.println("\talias " + " " + sourceAlias.getName());
+					ArtistAlias targetAlias = artistAliasFactory.createArtistAlias();
+					targetAlias.setName(sourceAlias.getName());
+					targetArtist.addAlias(targetAlias);
 				}
-				tx.success();
+				for (Release sourceRelease : sourceArtist.getReleases()) {
+					System.out.println("\trelease " + sourceRelease.getId() + " " + sourceRelease.getTitle());
+					Release targetRelease = releaseFactory.createRelease();
+					targetRelease.setId(sourceRelease.getId());
+					targetRelease.setTitle(sourceRelease.getTitle());
+					for (Map.Entry<Integer,? extends Track> track : sourceRelease.getTracks().entrySet()) {
+						int trackNumber = track.getKey();
+						Track sourceTrack = track.getValue();
+						System.out.println("\t\ttrack " + sourceTrack.getId() + " #" + trackNumber + " " + sourceTrack.getTitle());
+						Track targetTrack = trackFactory.createTrack();
+						targetTrack.setTitle(sourceTrack.getTitle());
+						targetRelease.addTrack(targetTrack, trackNumber);
+					}
+					targetArtist.addRelease(targetRelease);
+				}
+				*/
+				//tx.success();
 			} finally {
-				tx.finish();
+				//tx.finish();
 			}
 		}
 
 		session.getTransaction().commit();
 
 		HibernateUtil.getSessionFactory().close();
-		
+		/*
 		System.out.println("Shutting down index service");
 		indexService.shutdown();
 		System.out.println("Shutting down neo service");
-		neo.shutdown();
+		neo.shutdown();\
+		*/
 	}
 }
