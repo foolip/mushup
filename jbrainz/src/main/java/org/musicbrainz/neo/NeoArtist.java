@@ -8,8 +8,6 @@ import org.neo4j.util.index.IndexService;
 import org.neo4j.util.NeoRelationshipSet;
 import org.neo4j.util.NodeWrapperRelationshipSet;
 
-import java.util.*;
-
 public class NeoArtist extends NeoEntity implements Artist {
 	private static final String KEY_TYPE = "type";
 	private static final String KEY_NAME = "name";
@@ -17,11 +15,14 @@ public class NeoArtist extends NeoEntity implements Artist {
 	private static final String KEY_DISAMBIGUATION = "disambiguation";
 	
 	private final NeoRelationshipSet<NeoArtistAlias> aliases;
-
+	private final NeoRelationshipSet<NeoRelease> releases;
+	
 	NeoArtist(NeoService neo, Node underlyingNode, IndexService indexService) {
 		super(neo, underlyingNode, indexService);
 		aliases = new NodeWrapperRelationshipSet<NeoArtistAlias>(getNeo(), getUnderlyingNode(),
-				RelTypes.ALIAS, Direction.OUTGOING, NeoArtistAlias.class);
+				RelTypes.ARTIST_ALIAS, Direction.OUTGOING, NeoArtistAlias.class);
+		releases = new NodeWrapperRelationshipSet<NeoRelease>(getNeo(), getUnderlyingNode(),
+				RelTypes.ARTIST_RELEASE, Direction.OUTGOING, NeoRelease.class);
 	}
 
 	public Type getType() {
@@ -59,8 +60,8 @@ public class NeoArtist extends NeoEntity implements Artist {
 		else
 			getUnderlyingNode().setProperty(KEY_NAME, name);
 		// remove sort name if it is redundant
-		if (name.equals((String)getUnderlyingNode().getProperty(KEY_SORT_NAME, null)))
-			getUnderlyingNode().removeProperty(KEY_SORT_NAME);
+		//if (name.equals((String)getUnderlyingNode().getProperty(KEY_SORT_NAME, null)))
+		//	getUnderlyingNode().removeProperty(KEY_SORT_NAME);
 	}
 
 	public String getSortName() {
@@ -70,7 +71,7 @@ public class NeoArtist extends NeoEntity implements Artist {
 	}
 
 	public void setSortName(String sortName) {
-		if (sortName == null || sortName.equals("") || sortName.equals(getName()))
+		if (sortName == null || sortName.equals(""))// || sortName.equals(getName()))
 			getUnderlyingNode().removeProperty(KEY_SORT_NAME);
 		else
 			getUnderlyingNode().setProperty(KEY_SORT_NAME, sortName);
@@ -95,20 +96,11 @@ public class NeoArtist extends NeoEntity implements Artist {
 		aliases.add((NeoArtistAlias)alias);
 	}
 
-	public Iterable<Release> getReleases() {
-		// FIXME: why does this suck so badly?
-		/*
-		LinkedList<Release> releases = new LinkedList<Release>();
-		for (Relationship rel : getUnderlyingNode().
-				getRelationships(RelTypes.RELEASE, Direction.OUTGOING)) {
-			releases.add(new NeoRelease(rel.getEndNode(), this.indexService));
-		}
+	public Iterable<NeoRelease> getReleases() {
 		return releases;
-		*/
-		return null;
 	}
 
-	public void addRelease(Release rel) {
-		getUnderlyingNode().createRelationshipTo(((NeoRelease)rel).getUnderlyingNode(), RelTypes.RELEASE);
+	public void addRelease(Release release) {
+		releases.add((NeoRelease)release);
 	}
 }

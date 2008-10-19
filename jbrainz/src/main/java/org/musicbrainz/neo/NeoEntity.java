@@ -26,7 +26,7 @@ public abstract class NeoEntity extends NodeWrapperImpl implements Entity {
 		getUnderlyingNode().setProperty(KEY_MBID, uuid);
 
 		// FIXME: remove possible old value?
-		indexService.index(getUnderlyingNode(), "UUID", id.hashCode());
+		//indexService.index(getUnderlyingNode(), "UUID", id.hashCode());
 	}
 
 	public Iterable<UrlRelation> getUrlRelations() {
