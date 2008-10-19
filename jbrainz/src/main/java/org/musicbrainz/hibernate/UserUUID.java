@@ -15,7 +15,7 @@ public class UserUUID implements UserType {
 		return SQL_TYPES;
 	}
 
-	public Class returnedClass() {
+	public Class<UUID> returnedClass() {
 		return UUID.class;
 	}
 

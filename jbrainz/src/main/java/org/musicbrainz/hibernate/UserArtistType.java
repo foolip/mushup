@@ -15,7 +15,7 @@ public class UserArtistType implements UserType {
 		return SQL_TYPES;
 	}
 
-	public Class returnedClass() {
+	public Class<Artist.Type> returnedClass() {
 		return Artist.Type.class;
 	}
 
