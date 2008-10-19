@@ -4,7 +4,7 @@
 	  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.musicbrainz.hibernate">
 
-	<class name="HibernateArtist" table="artist">
+	<class name="HibernateArtist" table="artist" batch-size="100">
 		<comment>MusicBrainz Artist.</comment>
 
 		<id name="row" column="id">
@@ -18,7 +18,7 @@
 		<property name="name" type="string" column="name" />
 		<property name="sortName" type="string" column="sortname" />
 		<property name="disambiguation" type="string" column="resolution" />
-
+<!--
 		<set name="aliases" table="artistalias">
 			<key column="ref"/>
 			<one-to-many class="HibernateArtistAlias"/>
@@ -28,6 +28,9 @@
 			<key column="artist"/>
 			<one-to-many class="HibernateRelease"/>
 		</set>
+-->
 	</class>
+	
+	<query name="GetArtists">from HibernateArtist</query>
 
 </hibernate-mapping>

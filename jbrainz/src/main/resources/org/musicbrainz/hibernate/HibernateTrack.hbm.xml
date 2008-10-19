@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.musicbrainz.hibernate">
+
+	<class name="HibernateTrack" table="track">
+		<comment>MusicBrainz Track.</comment>
+
+		<id name="row" column="id">
+			<generator class="sequence">
+				<param name="sequence">track_id_seq</param>
+			</generator>
+		</id>
+
+		<property name="uuid" type="org.musicbrainz.hibernate.UserUUID" column="gid" />
+		<property name="title" type="string" column="name" />
+		
+		<set name="releaseTracks" table="albumjoin">
+			<key column="track"/>
+			<one-to-many class="HibernateReleaseTrack"/>
+		</set>
+	</class>
+
+</hibernate-mapping>

@@ -19,8 +19,13 @@
 		<!-- Enable Hibernate's automatic session context management -->
 		<property name="current_session_context_class">thread</property>
 
-		<!-- Disable the second-level cache  -->
+		<!-- Disable the second-level cache  
 		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+		-->
+		<property name="hibernate.default_batch_fetch_size">20</property>
+
+		<property name="hibernate.jdbc.batch_size">20</property>
+		<property name="jdbc.batch_size">20</property>
 
 		<!-- Echo all executed SQL to stdout -->
 		<property name="show_sql">true</property>
@@ -28,6 +33,8 @@
 		<mapping resource="org/musicbrainz/hibernate/HibernateArtist.hbm.xml"/>
 		<mapping resource="org/musicbrainz/hibernate/HibernateArtistAlias.hbm.xml"/>
 		<mapping resource="org/musicbrainz/hibernate/HibernateRelease.hbm.xml"/>
+		<mapping resource="org/musicbrainz/hibernate/HibernateTrack.hbm.xml"/>
+		<mapping resource="org/musicbrainz/hibernate/HibernateReleaseTrack.hbm.xml"/>
 
 	</session-factory>
 
