@@ -13,6 +13,8 @@ public class NeoArtist extends NeoEntity implements Artist {
 	private static final String KEY_NAME = "name";
 	private static final String KEY_SORT_NAME = "sortName";
 	private static final String KEY_DISAMBIGUATION = "disambiguation";
+	private static final String KEY_DATE_BEGIN= "beginDate";
+	private static final String KEY_DATE_END= "endDate";
 	
 	private final NeoRelationshipSet<NeoArtistAlias> aliases;
 	private final NeoRelationshipSet<NeoRelease> releases;
@@ -51,7 +53,7 @@ public class NeoArtist extends NeoEntity implements Artist {
 	}
 
 	public String getName() {
-		return (String)getUnderlyingNode().getProperty(KEY_NAME);
+		return (String)getUnderlyingNode().getProperty(KEY_NAME, null);
 	}
 
 	public void setName(String name) {
@@ -71,23 +73,36 @@ public class NeoArtist extends NeoEntity implements Artist {
 	}
 
 	public void setSortName(String sortName) {
-		if (sortName == null || sortName.equals(""))// || sortName.equals(getName()))
+		if (sortName == null || sortName.equals("") || sortName.equals(getName()))
 			getUnderlyingNode().removeProperty(KEY_SORT_NAME);
 		else
 			getUnderlyingNode().setProperty(KEY_SORT_NAME, sortName);
 	}
 
 	public String getDisambiguation() {
-		return (String)getUnderlyingNode().getProperty(KEY_DISAMBIGUATION);
+		return (String)getUnderlyingNode().getProperty(KEY_DISAMBIGUATION, null);
 	}
 
 	public void setDisambiguation(String disamb) {
-		if (disamb == null || disamb.equals(""))
-			getUnderlyingNode().removeProperty(KEY_DISAMBIGUATION);
-		else
-			getUnderlyingNode().setProperty(KEY_DISAMBIGUATION, disamb);
+		setOrRemoveProperty(KEY_DISAMBIGUATION, disamb);
+	}
+	
+	public String getBeginDate() {
+		return (String)getUnderlyingNode().getProperty(KEY_DATE_BEGIN, null);
 	}
 
+	public void setBeginDate(String date) {
+		setOrRemoveProperty(KEY_DATE_BEGIN, date);
+	}
+
+	public String getEndDate() {
+		return (String)getUnderlyingNode().getProperty(KEY_DATE_BEGIN, null);
+	}
+
+	public void setEndDate(String date) {
+		setOrRemoveProperty(KEY_DATE_END, date);
+	}
+	
 	public Iterable<NeoArtistAlias> getAliases() {
 		return aliases;
 	}
@@ -102,5 +117,12 @@ public class NeoArtist extends NeoEntity implements Artist {
 
 	public void addRelease(Release release) {
 		releases.add((NeoRelease)release);
+	}
+	
+	private void setOrRemoveProperty(String key, Object value) {
+		if (value == null)
+			getUnderlyingNode().removeProperty(key);
+		else
+			getUnderlyingNode().setProperty(key, value);
 	}
 }

@@ -18,7 +18,9 @@ public abstract class NeoEntity extends NodeWrapperImpl implements Entity {
 
 	public UUID getId() {
 		long[] uuid = (long[])getUnderlyingNode().getProperty(KEY_MBID);
-		return new UUID(uuid[0], uuid[1]);
+		if (uuid.length == 2)
+			return new UUID(uuid[0], uuid[1]);
+		return null;
 	}
 
 	public void setId(UUID id) {

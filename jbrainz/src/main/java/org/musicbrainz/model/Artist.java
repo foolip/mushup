@@ -15,6 +15,12 @@ public interface Artist extends Entity {
     public String getDisambiguation();
     public void setDisambiguation(String disamb);
 
+    public String getBeginDate();
+    public void setBeginDate(String date);
+    
+    public String getEndDate();
+    public void setEndDate(String date);
+    
     public Iterable<? extends ArtistAlias> getAliases();
     public void addAlias(ArtistAlias alias);
 
